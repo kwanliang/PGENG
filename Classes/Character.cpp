@@ -10,7 +10,7 @@ void GameChar::init(const char* SourceName, const char* CharName, float posX, fl
 	intDirX = 0;
 	intDirY = 0;
 	fSpeed = 0.01f;
-	fmaxSpeed = 1.f;
+	fmaxSpeed = 5.f;
 
 	Stop();
 }

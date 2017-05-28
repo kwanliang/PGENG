@@ -64,6 +64,18 @@ bool HelloWorld::init()
 
 	this->addChild(nodeChar, 1);
 
+	auto nodeTime = Node::create();
+	nodeTime->setName("nodeTime");
+
+	timer.init(10.f);
+	
+
+	nodeTime->addChild(timer.getSprite(), 1);
+	this->addChild(nodeTime, 0);
+
+
+	isHoldingBlock = false;
+
 	//auto moveEvent = MoveBy::create(5, Vec2(200.0f, 0.0f));
 	////sprite_Char->runAction(moveEvent->clone());
 
@@ -78,8 +90,10 @@ bool HelloWorld::init()
 	keyboard_listener->onKeyReleased = CC_CALLBACK_2(HelloWorld::onKeyReleased, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboard_listener, this);
 	auto mouse_listener = EventListenerMouse::create();
-	mouse_listener->onMouseDown = CC_CALLBACK_1(HelloWorld::onMousePressed, this);
+	//mouse_listener->onMouseDown = CC_CALLBACK_1(HelloWorld::onMousePressed, this);
 	mouse_listener->onMouseUp = CC_CALLBACK_1(HelloWorld::onMouseReleased, this);
+	mouse_listener->onMouseMove = CC_CALLBACK_1(HelloWorld::onMouseMoved, this);
+	//mouse_listener->onMouseDown = CC_CALLBACK_1(HelloWorld::onMouseHold, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(mouse_listener, this);
 
 	//this->schedule(schedule_selector(HelloWorld::onKeyHold));
@@ -191,16 +205,16 @@ bool HelloWorld::init()
 //	}
 //}
 
-//void HelloWorld::onMouseHold(float interval)
-//{
-//	if (std::find(heldButtons.begin(), heldButtons.end(), MOUSE_BUTTON_LEFT)
-//		!= heldButtons.end())
-//	{
-//		auto curSprite = this->getChildByName("nodeChar")->getChildByName("sprite_Char");
-//		auto moveEvent = MoveBy::create(0.0f, Vec2(10.0f, 0.f));
-//		curSprite->runAction(moveEvent);
-//	}
-//}
+void HelloWorld::onMouseHold(float interval)
+{
+	if (std::find(heldMouse.begin(), heldMouse.end(), MOUSE_BUTTON_LEFT)
+		!= heldMouse.end())
+	{
+		/*auto curSprite = this->getChildByName("nodeChar")->getChildByName("sprite_Char");
+		auto moveEvent = MoveBy::create(0.0f, Vec2(10.0f, 0.f));*/
+		//curSprite->runAction(moveEvent);
+	}
+}
 
 void HelloWorld::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 {
@@ -249,19 +263,32 @@ void HelloWorld::onMousePressed(Event* event)
 	//	heldButtons.push_back(e->getMouseButton());
 	//}
 	EventMouse* e = (EventMouse*)event;
-	if (e->getMouseButton() == MOUSE_BUTTON_LEFT)
-	{
-		hero.MoveCharByCoord(e->getCursorX(), e->getCursorY());
-		//positionToMove = e->getLocation();
-		//positionToMove = positionToMove.getNormalized();
-		//auto curSprite = this->getChildByName("nodeChar")->getChildByName("sprite_Char");
-		//auto moveEvent = MoveBy::create(0.0f, Vec2(positionToMove.x, positionToMove.y));
-		//curSprite->runAction(moveEvent);
+	if (std::find(heldMouse.begin(), heldMouse.end(), MOUSE_BUTTON_LEFT) == heldMouse.end()){
+		if (e->getMouseButton() == MOUSE_BUTTON_LEFT)
+		{
+			hero.MoveCharByCoord(e->getCursorX(), e->getCursorY());
+			//positionToMove = e->getLocation();
+			//positionToMove = positionToMove.getNormalized();
+			//auto curSprite = this->getChildByName("nodeChar")->getChildByName("sprite_Char");
+			//auto moveEvent = MoveBy::create(0.0f, Vec2(positionToMove.x, positionToMove.y));
+			//curSprite->runAction(moveEvent);
+			heldMouse.push_back(MOUSE_BUTTON_LEFT);
+		}
 	}
 }
 
+//void HelloWorld::onMouseHold(Event* event){
+//	if (std::find(heldMouse.begin(), heldMouse.end(), MOUSE_BUTTON_LEFT) != heldMouse.end()){
+//		//pressed
+//	}
+//}
+
 void HelloWorld::onMouseReleased(Event* event)
 {
+	heldMouse.erase(std::remove(heldMouse.begin(), heldMouse.end(), MOUSE_BUTTON_LEFT), heldMouse.end());
+	isHoldingBlock = false;
+	timer.reset(10.f);
+
 	//EventMouse* e = (EventMouse*)event;
 	//if (e->getMouseButton() == MOUSE_BUTTON_LEFT)
 	//{
@@ -274,15 +301,35 @@ void HelloWorld::onMouseReleased(Event* event)
 	//}
 	//heldButtons.erase(std::remove(heldButtons.begin(), heldButtons.end(), e->getMouseButton()), heldButtons.end());
 }
+using namespace std;
+void HelloWorld::onMouseMoved(Event* event){
+	EventMouse* e = (EventMouse*)event;
+	
+	if (e->getMouseButton() == MOUSE_BUTTON_LEFT){
+		auto mouse_listener = EventListenerMouse::create();
+		hero.MoveCharByCoord(e->getCursorX(), e->getCursorY());
+		_eventDispatcher->addEventListenerWithFixedPriority(mouse_listener, 1);
+		isHoldingBlock = true;
+	}
 
+	//std::stringstream message;
+	//message << e->getCursorX();
+	//label = Label::createWithSystemFont(message.str(), "Arial", 100);
+	//label->setPosition(200,50);
+	//this->addChild(label);
+
+	this->scheduleUpdate();
+}
 void HelloWorld::update(float delta)
 {
 	//auto cam = Camera::getDefaultCamera();
 	//cam->setPosition(hero.getSprite()->getPosition());
-
+	
 	GLProgramState* state = GLProgramState::getOrCreateWithGLProgram(shaderCharEffect);
 	hero.getSprite()->setGLProgram(shaderCharEffect);
 	hero.getSprite()->setGLProgramState(state);
+
+
 	state->setUniformVec2("loc", mLoc);
 
 	rendtex->beginWithClear(.0f, .0f, .0f, .0f);
@@ -292,6 +339,10 @@ void HelloWorld::update(float delta)
 	rendtexSprite->setGLProgram(proPostProcess);
 
 	hero.update(delta);
+	if (isHoldingBlock == true){
+		timer.update(delta);
+	}
+	
 }
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
