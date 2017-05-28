@@ -1,12 +1,13 @@
 #include "AppDelegate.h"
-#include "HelloWorldScene.h"
+#include "MainMenu.h"
 
 USING_NS_CC;
 
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
-static cocos2d::Size designResolutionSize = mediumResolutionSize;
+static cocos2d::Size phoneResolutionSize = cocos2d::Size(480, 854);
+static cocos2d::Size designResolutionSize = phoneResolutionSize;
 
 AppDelegate::AppDelegate()
 {
@@ -40,11 +41,18 @@ bool AppDelegate::applicationDidFinishLaunching() {
     if(!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
         glview = GLViewImpl::createWithRect("LabGame", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+        //glview = GLViewImpl::create("LabGame");
 #else
         glview = GLViewImpl::create("LabGame");
 #endif
         director->setOpenGLView(glview);
     }
+
+    // Multi-resolution support
+    cocos2d::Size designSize = cocos2d::Size(320, 480);
+    cocos2d::Size resourceSize = cocos2d::Size(640, 960);
+    director->setContentScaleFactor(resourceSize.height / designSize.height);
+    director->getOpenGLView()->setDesignResolutionSize(designSize.width, designSize.height, ResolutionPolicy::FIXED_WIDTH);
 
     // turn on display FPS
     director->setDisplayStats(true);
@@ -74,7 +82,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-    auto scene = HelloWorld::createScene();
+    auto scene = MainMenu::createScene();
 
     // run
     director->runWithScene(scene);

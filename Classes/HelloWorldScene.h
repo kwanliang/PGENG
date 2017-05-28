@@ -18,7 +18,7 @@ public:
 	std::vector<int> heldMouse;
 
     virtual bool init();
-	virtual void update(float);
+	virtual void update(float dt);
 
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
