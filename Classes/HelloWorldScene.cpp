@@ -73,8 +73,72 @@ bool HelloWorld::init()
 	nodeTime->addChild(timer.getSprite(), 1);
 	this->addChild(nodeTime, 0);
 
-
 	isHoldingBlock = false;
+
+	//TESTING FROGS
+	Frog* green = new Frog;
+	green->init(Frog::TYPE::GREEN, 1);
+	green->SetPos(Vec2(100, 500));
+	green->SetScale(Vec2(3, 3));
+	frogList.push_back(green);
+	this->addChild(green->getSprite(), 1);
+
+	Frog* yellow = new Frog;
+	yellow->init(Frog::TYPE::YELLOW, 1);
+	yellow->SetPos(Vec2(200, 500));
+	yellow->SetScale(Vec2(3, 3));
+	frogList.push_back(yellow);
+	this->addChild(yellow->getSprite(), 1);
+
+	Frog* blue = new Frog;
+	blue->init(Frog::TYPE::BLUE, 1);
+	blue->SetPos(Vec2(300, 500));
+	blue->SetScale(Vec2(3, 3));
+	frogList.push_back(blue);
+	this->addChild(blue->getSprite(), 1);
+
+	Frog* red = new Frog;
+	red->init(Frog::TYPE::RED, 1);
+	red->SetPos(Vec2(400, 500));
+	red->SetScale(Vec2(3, 3));
+	frogList.push_back(red);
+	this->addChild(red->getSprite(), 1);
+
+	//TESTING BUTTERFLY
+	Butterfly* greenB = new Butterfly;
+	greenB->init(Butterfly::TYPE::GREEN, Vec2(1, 1));
+	greenB->SetPos(Vec2(100, 300));
+	greenB->SetScale(Vec2(0.5f, 0.5f));
+	butterflyList.push_back(greenB);
+	this->addChild(greenB->getSprite(), 1);
+
+	Butterfly* yellowB = new Butterfly;
+	yellowB->init(Butterfly::TYPE::YELLOW, Vec2(1, 1));
+	yellowB->SetPos(Vec2(200, 300));
+	yellowB->SetScale(Vec2(0.5f, 0.5f));
+	butterflyList.push_back(yellowB);
+	this->addChild(yellowB->getSprite(), 1);
+
+	Butterfly* blueB = new Butterfly;
+	blueB->init(Butterfly::TYPE::BLUE, Vec2(1, 1));
+	blueB->SetPos(Vec2(300, 300));
+	blueB->SetScale(Vec2(0.5f, 0.5f));
+	butterflyList.push_back(blueB);
+	this->addChild(blueB->getSprite(), 1);
+
+	Butterfly* redB = new Butterfly;
+	redB->init(Butterfly::TYPE::RED, Vec2(1, 1));
+	redB->SetPos(Vec2(400, 300));
+	redB->SetScale(Vec2(0.5f, 0.5f));
+	butterflyList.push_back(redB);
+	this->addChild(redB->getSprite(), 1);
+
+	Butterfly* rainbow = new Butterfly;
+	rainbow->init(Butterfly::TYPE::RAINBOW, Vec2(1, 1));
+	rainbow->SetPos(Vec2(500, 300));
+	rainbow->SetScale(Vec2(0.5f, 0.5f));
+	butterflyList.push_back(rainbow);
+	this->addChild(rainbow->getSprite(), 1);
 
 	//auto moveEvent = MoveBy::create(5, Vec2(200.0f, 0.0f));
 	////sprite_Char->runAction(moveEvent->clone());
@@ -347,6 +411,8 @@ void HelloWorld::update(float delta)
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
 {
+	frogList.clear();
+	butterflyList.clear();
 	//Close the cocos2d-x game scene and quit the application
 	Director::getInstance()->end();
 

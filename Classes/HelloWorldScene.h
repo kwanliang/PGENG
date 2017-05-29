@@ -4,6 +4,8 @@
 #include <vector>
 #include "cocos2d.h"
 #include "Character.h"
+#include "Frog.h"
+#include "Butterfly.h"
 #include "Timer.h"
 #include <map>
 
@@ -48,6 +50,9 @@ private:
 	float currTime;
 	GameChar hero;
 	CTimer timer;
+
+	vector<Frog*> frogList;
+	vector<Butterfly*> butterflyList;
 
 	bool isHoldingBlock;
 };
