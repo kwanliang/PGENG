@@ -44,12 +44,12 @@ void Frog::init(TYPE frog, int lane)
 	switch (lane) {
 		case LANE::LANE1:
 		{
-			SetPos(Vec2((visibleSize.width / 6) * 0.5 , (visibleSize.height * 0.8)));
+			SetPos(Vec2((visibleSize.width / 6) * 0.95 , (visibleSize.height * 0.8)));
 			break;
 		}
 		case LANE::LANE2:
 		{
-			SetPos(Vec2((visibleSize.width /6) * 1.5 , (visibleSize.height * 0.8)));
+			SetPos(Vec2((visibleSize.width /6) * 1.7 , (visibleSize.height * 0.8)));
 			break;
 		}
 		case LANE::LANE3:
@@ -59,17 +59,17 @@ void Frog::init(TYPE frog, int lane)
 		}
 		case LANE::LANE4:
 		{
-			SetPos(Vec2((visibleSize.width / 6) * 3.5, (visibleSize.height * 0.8)));
+			SetPos(Vec2((visibleSize.width / 6) * 3.3, (visibleSize.height * 0.8)));
 			break;
 		}
 		case LANE::LANE5:
 		{
-			SetPos(Vec2((visibleSize.width / 6) * 4.5, (visibleSize.height * 0.8)));
+			SetPos(Vec2((visibleSize.width / 6) * 4.1, (visibleSize.height * 0.8)));
 			break;
 		}
 		case LANE::LANE6:
 		{
-			SetPos(Vec2((visibleSize.width / 6) * 5.5, (visibleSize.height * 0.8)));
+			SetPos(Vec2((visibleSize.width / 6) * 4.9, (visibleSize.height * 0.8)));
 			break;
 		}
 		default:

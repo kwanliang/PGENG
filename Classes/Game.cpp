@@ -48,7 +48,7 @@ bool Game::init()
 
     Size sprite_MudSize = Sprite::create("ZigzagGrass_Mud_Round.png")->getContentSize();
 
-	Sprite* Background = Sprite::create("water.png");
+	Sprite* Background = Sprite::create("background.png");
 	Background->setAnchorPoint(Vec2::ZERO);
 	Background->setContentSize(visibleSize);
 	this->addChild(Background);
@@ -97,48 +97,10 @@ bool Game::init()
 
 	isHoldingBlock = false;
 
-	//TESTING FROGS
-	Frog* green = new Frog;
-	green->init(Frog::TYPE::GREEN, Frog::LANE::LANE1);
-	green->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
-	green->SetScale(Vec2(3, 3));
-	frogList.push_back(green);
-	this->addChild(green->getSprite(), 1);
+	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 
-	Frog* yellow = new Frog;
-	yellow->init(Frog::TYPE::YELLOW, Frog::LANE::LANE2);
-	yellow->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
-	yellow->SetScale(Vec2(3, 3));
-	frogList.push_back(yellow);
-	this->addChild(yellow->getSprite(), 1);
-
-	Frog* blue = new Frog;
-	blue->init(Frog::TYPE::BLUE, Frog::LANE::LANE3);
-	blue->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
-	blue->SetScale(Vec2(3, 3));
-	frogList.push_back(blue);
-	this->addChild(blue->getSprite(), 1);
-
-	Frog* red = new Frog;
-	red->init(Frog::TYPE::RED, Frog::LANE::LANE4);
-	red->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
-	red->SetScale(Vec2(3, 3));
-	frogList.push_back(red);
-	this->addChild(red->getSprite(), 1);
-
-	Frog* red2 = new Frog;
-	red2->init(Frog::TYPE::RED, Frog::LANE::LANE5);
-	red2->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
-	red2->SetScale(Vec2(3, 3));
-	frogList.push_back(red2);
-	this->addChild(red2->getSprite(), 1);
-
-	Frog* red3 = new Frog;
-	red3->init(Frog::TYPE::RED, Frog::LANE::LANE6);
-	red3->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
-	red3->SetScale(Vec2(3, 3));
-	frogList.push_back(red3);
-	this->addChild(red3->getSprite(), 1);
+	// set the background music and continuously play it.
+	audio->playBackgroundMusic("Sound/BGM.wav", true);
 
     auto keyboard_listener = EventListenerKeyboard::create();
     keyboard_listener->onKeyPressed = CC_CALLBACK_2(Game::onKeyPressed, this);
@@ -201,17 +163,59 @@ void Game::onMouseReleased(Event* event)
 
 }
 
+Frog* Game::FetchFrog() {
+	for (auto it : frogList)
+	{
+		Frog* temp = it;
+		if (!temp->isActive)
+		{
+			temp->isActive = true;
+			return temp;
+		}
+	}
+
+	for (int i = 0; i < 10; ++i)
+	{
+		frogList.push_back(new Frog());
+	}
+	Frog* froggie = frogList.back();
+	froggie->isActive = true;
+	return froggie;
+}
+
 void Game::update(float dt)
 {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
 	if (isHoldingBlock == true) {
 		timer.update(dt);
 	}
 
+	Frog::TYPE frogType = static_cast<Frog::TYPE>(cocos2d::RandomHelper::random_int(0, 3));
+	Frog::LANE lane = static_cast<Frog::LANE>(cocos2d::RandomHelper::random_int(0, 5));
+	Frog* frog = FetchFrog();
+	frog->init(frogType, lane);
+	this->addChild(frog->getSprite(), 1);
+
 	for (int i = 0; i < frogList.size(); i++) {
-		float a = frogList.at(i)->getPos().y;
-		float b = frogList.at(i)->getPos().x;
-		a -= frogList.at(i)->GetSpeed();
-		frogList.at(i)->SetPos(Vec2(b, a));
+		if (frogList.at(i)->isActive)
+		{
+			float a = frogList.at(i)->getPos().y;
+			float b = frogList.at(i)->getPos().x;
+			a -= frogList.at(i)->GetSpeed();
+			frogList.at(i)->SetPos(Vec2(b, a));
+			for (auto it : frogList) {
+				if (it->isActive)
+				{
+					if (it->getPos().y < visibleSize.height*0.5) {
+
+						it->isActive = false;
+
+						this->removeChild(it->getSprite());
+					}
+				}
+			}
+		}
+
 	}
 }
 

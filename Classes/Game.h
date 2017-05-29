@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <SimpleAudioEngine.h>
 #include "cocos2d.h"
 #include "GridMap.h"
 #include "Frog.h"
@@ -24,7 +25,7 @@ public:
     virtual void onKeyReleased(EventKeyboard::KeyCode, Event*);
     virtual void onMousePressed(Event*);
     virtual void onMouseReleased(Event*);
-
+	Frog* FetchFrog();
     // implement the "static create()" method manually
     CREATE_FUNC(Game);
 
