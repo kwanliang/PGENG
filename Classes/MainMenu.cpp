@@ -49,7 +49,7 @@ bool MainMenu::init()
         case cocos2d::ui::Widget::TouchEventType::MOVED:
             break;
         case cocos2d::ui::Widget::TouchEventType::ENDED:
-            SceneManager::GetInstance()->SwitchScene(Game::createScene());
+            SceneManager::GetInstance()->SwitchScene(HelloWorld::createScene());
             break;
         case cocos2d::ui::Widget::TouchEventType::CANCELED:
             break;

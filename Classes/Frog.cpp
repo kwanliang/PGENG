@@ -2,6 +2,7 @@
 
 void Frog::init(TYPE frog, int lane)
 {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
 	//STATS ARE GONNA BE CHANGED WHEN GAMEPLAY IS IMPLETEMENTED FOR GAME BALANCING
 	switch (frog)
 	{
@@ -40,12 +41,50 @@ void Frog::init(TYPE frog, int lane)
 		default:
 			break;
 	}
+	switch (lane) {
+		case LANE::LANE1:
+		{
+			SetPos(Vec2((visibleSize.width / 6) * 0.5 , (visibleSize.height * 0.8)));
+			break;
+		}
+		case LANE::LANE2:
+		{
+			SetPos(Vec2((visibleSize.width /6) * 1.5 , (visibleSize.height * 0.8)));
+			break;
+		}
+		case LANE::LANE3:
+		{
+			SetPos(Vec2((visibleSize.width / 6) * 2.5, (visibleSize.height * 0.8)));
+			break;
+		}
+		case LANE::LANE4:
+		{
+			SetPos(Vec2((visibleSize.width / 6) * 3.5, (visibleSize.height * 0.8)));
+			break;
+		}
+		case LANE::LANE5:
+		{
+			SetPos(Vec2((visibleSize.width / 6) * 4.5, (visibleSize.height * 0.8)));
+			break;
+		}
+		case LANE::LANE6:
+		{
+			SetPos(Vec2((visibleSize.width / 6) * 5.5, (visibleSize.height * 0.8)));
+			break;
+		}
+		default:
+			break;
+	}
 	isDead = false;
+	
 	runAnimation();
 }
 
 void Frog::runItDown(void)
 {
+	auto move = MoveBy::create(0, Vec2(0, speed));
+	
+	
 	//run down the lane
 }
 
@@ -104,3 +143,4 @@ bool Frog::GetisDead(void)
 {
 	return isDead;
 }
+

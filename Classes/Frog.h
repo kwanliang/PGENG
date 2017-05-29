@@ -12,7 +12,7 @@ private:
 	//Stats of the frog
 	int HP;
 	int damage;
-	float speed;
+	int speed;
 
 	//Is the frog ded?
 	bool isDead;
@@ -34,6 +34,21 @@ public:
 		RED,
 
 	}FROG_TYPE;
+
+	enum LANE {
+		//Lane1
+		LANE1 = 0,
+
+		LANE2,
+
+		LANE3,
+
+		LANE4,
+
+		LANE5,
+
+		LANE6,
+	}LANE_NUMBER;
 
 	void init(TYPE frog, int lane);
 	void runItDown(void);

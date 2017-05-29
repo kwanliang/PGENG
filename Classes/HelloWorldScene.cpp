@@ -77,32 +77,46 @@ bool HelloWorld::init()
 
 	//TESTING FROGS
 	Frog* green = new Frog;
-	green->init(Frog::TYPE::GREEN, 1);
-	green->SetPos(Vec2(100, 500));
+	green->init(Frog::TYPE::GREEN, Frog::LANE::LANE1);
+	green->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
 	green->SetScale(Vec2(3, 3));
 	frogList.push_back(green);
 	this->addChild(green->getSprite(), 1);
 
 	Frog* yellow = new Frog;
-	yellow->init(Frog::TYPE::YELLOW, 1);
-	yellow->SetPos(Vec2(200, 500));
+	yellow->init(Frog::TYPE::YELLOW, Frog::LANE::LANE2);
+	yellow->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
 	yellow->SetScale(Vec2(3, 3));
 	frogList.push_back(yellow);
 	this->addChild(yellow->getSprite(), 1);
 
 	Frog* blue = new Frog;
-	blue->init(Frog::TYPE::BLUE, 1);
-	blue->SetPos(Vec2(300, 500));
+	blue->init(Frog::TYPE::BLUE, Frog::LANE::LANE3);
+	blue->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
 	blue->SetScale(Vec2(3, 3));
 	frogList.push_back(blue);
 	this->addChild(blue->getSprite(), 1);
 
 	Frog* red = new Frog;
-	red->init(Frog::TYPE::RED, 1);
-	red->SetPos(Vec2(400, 500));
+	red->init(Frog::TYPE::RED, Frog::LANE::LANE4);
+	red->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
 	red->SetScale(Vec2(3, 3));
 	frogList.push_back(red);
 	this->addChild(red->getSprite(), 1);
+
+	Frog* red2 = new Frog;
+	red2->init(Frog::TYPE::RED, Frog::LANE::LANE5);
+	red2->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
+	red2->SetScale(Vec2(3, 3));
+	frogList.push_back(red2);
+	this->addChild(red2->getSprite(), 1);
+
+	Frog* red3 = new Frog;
+	red3->init(Frog::TYPE::RED, Frog::LANE::LANE6);
+	red3->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
+	red3->SetScale(Vec2(3, 3));
+	frogList.push_back(red3);
+	this->addChild(red3->getSprite(), 1);
 
 	//TESTING BUTTERFLY
 	Butterfly* greenB = new Butterfly;
@@ -139,6 +153,8 @@ bool HelloWorld::init()
 	rainbow->SetScale(Vec2(0.5f, 0.5f));
 	butterflyList.push_back(rainbow);
 	this->addChild(rainbow->getSprite(), 1);
+
+	//speed = cocos2d::RandomHelper::random_int(0, 10);
 
 	//auto moveEvent = MoveBy::create(5, Vec2(200.0f, 0.0f));
 	////sprite_Char->runAction(moveEvent->clone());
@@ -216,29 +232,29 @@ bool HelloWorld::init()
 	shaderCharEffect->link();
 	shaderCharEffect->updateUniforms();
 
-	proPostProcess = GLProgram::createWithFilenames("Basic.vsh", "GreyScale.fsh");
-	proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_POSITION, GLProgram::VERTEX_ATTRIB_POSITION);
-	proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_COLOR, GLProgram::VERTEX_ATTRIB_COLOR);
-	proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_TEX_COORD, GLProgram::VERTEX_ATTRIB_TEX_COORD);
-	proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_TEX_COORD1, GLProgram::VERTEX_ATTRIB_TEX_COORD1);
-	proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_TEX_COORD2, GLProgram::VERTEX_ATTRIB_TEX_COORD2);
-	proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_TEX_COORD3, GLProgram::VERTEX_ATTRIB_TEX_COORD3);
-	proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_NORMAL, GLProgram::VERTEX_ATTRIB_NORMAL);
-	proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_BLEND_WEIGHT, GLProgram::VERTEX_ATTRIB_BLEND_WEIGHT);
-	proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_BLEND_INDEX, GLProgram::VERTEX_ATTRIB_BLEND_INDEX);
-	proPostProcess->link();
-	proPostProcess->updateUniforms();
-
-	rendtex = RenderTexture::create(visibleSize.width, visibleSize.height);
-	rendtex->retain();
-
-	rendtexSprite = Sprite::createWithTexture(rendtex->getSprite()->getTexture());
-	rendtexSprite->setTextureRect(Rect(0, 0, rendtexSprite->getTexture()->getContentSize().width, rendtexSprite->getTexture()->getContentSize().height));
-	rendtexSprite->setAnchorPoint(Point::ZERO);
-	rendtexSprite->setPosition(Point::ZERO);
-	rendtexSprite->setFlippedY(true);
-	rendtexSprite->setGLProgram(proPostProcess);
-	this->addChild(rendtexSprite, 2);
+	//proPostProcess = GLProgram::createWithFilenames("Basic.vsh", "GreyScale.fsh");
+	//proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_POSITION, GLProgram::VERTEX_ATTRIB_POSITION);
+	//proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_COLOR, GLProgram::VERTEX_ATTRIB_COLOR);
+	//proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_TEX_COORD, GLProgram::VERTEX_ATTRIB_TEX_COORD);
+	//proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_TEX_COORD1, GLProgram::VERTEX_ATTRIB_TEX_COORD1);
+	//proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_TEX_COORD2, GLProgram::VERTEX_ATTRIB_TEX_COORD2);
+	//proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_TEX_COORD3, GLProgram::VERTEX_ATTRIB_TEX_COORD3);
+	//proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_NORMAL, GLProgram::VERTEX_ATTRIB_NORMAL);
+	//proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_BLEND_WEIGHT, GLProgram::VERTEX_ATTRIB_BLEND_WEIGHT);
+	//proPostProcess->bindAttribLocation(GLProgram::ATTRIBUTE_NAME_BLEND_INDEX, GLProgram::VERTEX_ATTRIB_BLEND_INDEX);
+	//proPostProcess->link();
+	//proPostProcess->updateUniforms();
+	//
+	//rendtex = RenderTexture::create(visibleSize.width, visibleSize.height);
+	//rendtex->retain();
+	//
+	//rendtexSprite = Sprite::createWithTexture(rendtex->getSprite()->getTexture());
+	//rendtexSprite->setTextureRect(Rect(0, 0, rendtexSprite->getTexture()->getContentSize().width, rendtexSprite->getTexture()->getContentSize().height));
+	//rendtexSprite->setAnchorPoint(Point::ZERO);
+	//rendtexSprite->setPosition(Point::ZERO);
+	//rendtexSprite->setFlippedY(true);
+	//rendtexSprite->setGLProgram(proPostProcess);
+	//this->addChild(rendtexSprite, 2);
 
 	this->scheduleUpdate();
 
@@ -365,7 +381,7 @@ void HelloWorld::onMouseReleased(Event* event)
 	//}
 	//heldButtons.erase(std::remove(heldButtons.begin(), heldButtons.end(), e->getMouseButton()), heldButtons.end());
 }
-using namespace std;
+
 void HelloWorld::onMouseMoved(Event* event){
 	EventMouse* e = (EventMouse*)event;
 	
@@ -375,6 +391,7 @@ void HelloWorld::onMouseMoved(Event* event){
 		_eventDispatcher->addEventListenerWithFixedPriority(mouse_listener, 1);
 		isHoldingBlock = true;
 	}
+	this->scheduleUpdate();
 
 	//std::stringstream message;
 	//message << e->getCursorX();
@@ -382,7 +399,6 @@ void HelloWorld::onMouseMoved(Event* event){
 	//label->setPosition(200,50);
 	//this->addChild(label);
 
-	this->scheduleUpdate();
 }
 void HelloWorld::update(float delta)
 {
@@ -396,16 +412,24 @@ void HelloWorld::update(float delta)
 
 	state->setUniformVec2("loc", mLoc);
 
-	rendtex->beginWithClear(.0f, .0f, .0f, .0f);
-	this->visit();
-	rendtex->end();
-	rendtexSprite->setTexture(rendtex->getSprite()->getTexture());
-	rendtexSprite->setGLProgram(proPostProcess);
+	//rendtex->beginWithClear(.0f, .0f, .0f, .0f);
+	//this->visit();
+	//rendtex->end();
+	//rendtexSprite->setTexture(rendtex->getSprite()->getTexture());
+	//rendtexSprite->setGLProgram(proPostProcess);
 
 	hero.update(delta);
 	if (isHoldingBlock == true){
 		timer.update(delta);
 	}
+	
+	for (int i = 0; i < frogList.size(); i++) {
+		float a = frogList.at(i)->getPos().y;
+		float b = frogList.at(i)->getPos().x;
+		a -= frogList.at(i)->GetSpeed();
+		frogList.at(i)->SetPos(Vec2(b, a));
+	}
+	
 	
 }
 

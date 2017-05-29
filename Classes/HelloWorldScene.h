@@ -50,9 +50,9 @@ private:
 	float currTime;
 	GameChar hero;
 	CTimer timer;
-
-	vector<Frog*> frogList;
-	vector<Butterfly*> butterflyList;
+	int speed;
+	std::vector<Frog*> frogList;
+	std::vector<Butterfly*> butterflyList;
 
 	bool isHoldingBlock;
 };
