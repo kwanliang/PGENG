@@ -14,12 +14,17 @@ public:
 
     void init(Vec2 windowsize);
 
+    void CheckForMatches(void);
+	void CheckSurrondingMatch(int index, int& counter);
+    Grid* GetGridWithPos(Vec2 pos);
+
     inline Grid* GetGrid(int index) { return gridmap[index]; }
     inline Vec2 GetGridSize(void) { return gridsize; }
     inline int GetNumGrid(void) { return numgrid; }
 
 private:
     std::vector<Grid*> gridmap;
+	std::vector<Grid*> match;
     Vec2 gridsize;
 
     int row;

@@ -3,6 +3,9 @@
 #include <vector>
 #include "cocos2d.h"
 #include "GridMap.h"
+#include "Frog.h"
+#include "Butterfly.h"
+#include "Timer.h"
 
 using namespace cocos2d;
 
@@ -27,5 +30,16 @@ public:
 
 private:
     GridMap m_GridMap;
+    Grid* SelectedGrid;
 
+	std::vector<Frog*> frogList;
+
+	CTimer timer;
+
+	float maxTime;
+	float currTime;
+
+	int speed;
+
+	bool isHoldingBlock;
 };

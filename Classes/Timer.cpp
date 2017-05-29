@@ -10,7 +10,7 @@ void CTimer::init(float timeAmt){
 		progressTimer->setMidpoint(Vec2(0, 0));
 		progressTimer->setBarChangeRate(Vec2(1, 0));
 		progressTimer->setPercentage(100);
-		progressTimer->setPosition(Vec2(visibleSize.width/2, visibleSize.height/3));
+		progressTimer->setPosition(Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.9f));
 	}
 	maxTime = timeAmt;
 	currTime = maxTime;
