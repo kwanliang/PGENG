@@ -80,6 +80,7 @@ bool HelloWorld::init()
 	green->init(Frog::TYPE::GREEN, Frog::LANE::LANE1);
 	green->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
 	green->SetScale(Vec2(3, 3));
+	green->isActive = true;
 	frogList.push_back(green);
 	this->addChild(green->getSprite(), 1);
 
@@ -88,6 +89,7 @@ bool HelloWorld::init()
 	yellow->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
 	yellow->SetScale(Vec2(3, 3));
 	frogList.push_back(yellow);
+	yellow->isActive = true;
 	this->addChild(yellow->getSprite(), 1);
 
 	Frog* blue = new Frog;
@@ -95,6 +97,7 @@ bool HelloWorld::init()
 	blue->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
 	blue->SetScale(Vec2(3, 3));
 	frogList.push_back(blue);
+	blue->isActive = true;
 	this->addChild(blue->getSprite(), 1);
 
 	Frog* red = new Frog;
@@ -102,6 +105,7 @@ bool HelloWorld::init()
 	red->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
 	red->SetScale(Vec2(3, 3));
 	frogList.push_back(red);
+	red->isActive = true;
 	this->addChild(red->getSprite(), 1);
 
 	Frog* red2 = new Frog;
@@ -109,6 +113,7 @@ bool HelloWorld::init()
 	red2->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
 	red2->SetScale(Vec2(3, 3));
 	frogList.push_back(red2);
+	red2->isActive = true;
 	this->addChild(red2->getSprite(), 1);
 
 	Frog* red3 = new Frog;
@@ -116,6 +121,7 @@ bool HelloWorld::init()
 	red3->augmentSpeed(cocos2d::RandomHelper::random_int(1, 5));
 	red3->SetScale(Vec2(3, 3));
 	frogList.push_back(red3);
+	red3->isActive = true;
 	this->addChild(red3->getSprite(), 1);
 
 	//TESTING BUTTERFLY
@@ -400,11 +406,33 @@ void HelloWorld::onMouseMoved(Event* event){
 	//this->addChild(label);
 
 }
+
+Frog* HelloWorld::FetchFrog() {
+	for (auto it : frogList)
+	{
+		Frog* temp = it;
+		if (!temp->isActive)
+		{
+			temp->isActive = true;
+			return temp;
+		}
+	}
+
+	for (int i = 0; i < 10; ++i)
+	{
+		frogList.push_back(new Frog());
+	}
+	Frog* froggie = frogList.back();
+	froggie->isActive = true;
+	return froggie;
+}
+
 void HelloWorld::update(float delta)
 {
+
 	//auto cam = Camera::getDefaultCamera();
 	//cam->setPosition(hero.getSprite()->getPosition());
-	
+	auto visibleSize = Director::getInstance()->getVisibleSize();
 	GLProgramState* state = GLProgramState::getOrCreateWithGLProgram(shaderCharEffect);
 	hero.getSprite()->setGLProgram(shaderCharEffect);
 	hero.getSprite()->setGLProgramState(state);
@@ -422,16 +450,36 @@ void HelloWorld::update(float delta)
 	if (isHoldingBlock == true){
 		timer.update(delta);
 	}
-	
+
+	Frog::TYPE frogType = static_cast<Frog::TYPE>(cocos2d::RandomHelper::random_int(0, 3));
+	Frog::LANE lane = static_cast<Frog::LANE>(cocos2d::RandomHelper::random_int(0, 5));
+	Frog* frog = FetchFrog();
+	frog->init(frogType, lane);
+	this->addChild(frog->getSprite(), 1);
+
 	for (int i = 0; i < frogList.size(); i++) {
-		float a = frogList.at(i)->getPos().y;
-		float b = frogList.at(i)->getPos().x;
-		a -= frogList.at(i)->GetSpeed();
-		frogList.at(i)->SetPos(Vec2(b, a));
-	}
-	
-	
+		if (frogList.at(i)->isActive)
+		{
+			float a = frogList.at(i)->getPos().y;
+			float b = frogList.at(i)->getPos().x;
+			a -= frogList.at(i)->GetSpeed();
+			frogList.at(i)->SetPos(Vec2(b, a));
+			for (auto it : frogList) {
+				if (it->isActive)
+				{
+					if (it->getPos().y < visibleSize.height*0.5) {
+
+						it->isActive = false;
+
+						this->removeChild(it->getSprite());
+					}
+				}
+			}
+		}
+
+	}	
 }
+
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
 {

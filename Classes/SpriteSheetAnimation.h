@@ -12,8 +12,8 @@ private:
 	Sprite* animSprite;
 
 	//Transform stuff
-	Vec2 pos;
-	Vec2 scale;
+	Vec2 pos = Vec2(0,0);
+	Vec2 scale = Vec2(1,1);
 
 	int frames;
 

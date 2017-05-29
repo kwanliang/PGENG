@@ -22,6 +22,8 @@ public:
     virtual bool init();
 	virtual void update(float dt);
 
+	Frog* FetchFrog();
+
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
 	//void onKeyHold(float interval);

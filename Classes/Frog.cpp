@@ -77,6 +77,8 @@ void Frog::init(TYPE frog, int lane)
 	}
 	isDead = false;
 	
+	SetScale(Vec2(3, 3));
+
 	runAnimation();
 }
 
@@ -143,4 +145,3 @@ bool Frog::GetisDead(void)
 {
 	return isDead;
 }
-

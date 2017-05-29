@@ -54,6 +54,8 @@ public:
 	void runItDown(void);
 	void attack(void);
 
+	TYPE setFrog(TYPE frog);
+
 	void update(float dt);
 
 	//Setter-ish
@@ -66,6 +68,7 @@ public:
 	int GetDamage(void);
 	float GetSpeed(void);
 	bool GetisDead(void);
+	bool isActive = false;
 };
 
 #endif
