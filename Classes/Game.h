@@ -39,7 +39,7 @@ private:
 
 	float maxTime;
 	float currTime;
-
+	int frogLimit;
 	int speed;
 
 	bool isHoldingBlock;

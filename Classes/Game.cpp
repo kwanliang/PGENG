@@ -5,6 +5,10 @@
 #include "GameInstance.h"
 #include "MainMenu.h"
 
+
+#include "platform/CCPlatformMacros.h"
+#include <random>
+
 USING_NS_CC;
 
 Scene* Game::createScene()
@@ -90,7 +94,7 @@ bool Game::init()
 	nodeTime->setName("nodeTime");
 
 	timer.init(10.f);
-
+	frogLimit = 10;
 
 	nodeTime->addChild(timer.getSprite(), 1);
 	this->addChild(nodeTime, 0);
@@ -118,7 +122,7 @@ bool Game::init()
 
 void Game::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 {
-
+	
 }
 
 void Game::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
@@ -174,7 +178,7 @@ Frog* Game::FetchFrog() {
 		}
 	}
 
-	for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < 1; ++i)
 	{
 		frogList.push_back(new Frog());
 	}
@@ -192,13 +196,21 @@ void Game::update(float dt)
 
 	Frog::TYPE frogType = static_cast<Frog::TYPE>(cocos2d::RandomHelper::random_int(0, 3));
 	Frog::LANE lane = static_cast<Frog::LANE>(cocos2d::RandomHelper::random_int(0, 5));
-	Frog* frog = FetchFrog();
-	frog->init(frogType, lane);
-	this->addChild(frog->getSprite(), 1);
-
+	
+	
+	if (this->getChildrenCount()<= frogLimit){
+		Frog* frog = FetchFrog();
+		frog->init(frogType, lane);
+		this->addChild(frog->getSprite(), 1);
+	}
+			
+	
+	
 	for (int i = 0; i < frogList.size(); i++) {
+
 		if (frogList.at(i)->isActive)
 		{
+			
 			float a = frogList.at(i)->getPos().y;
 			float b = frogList.at(i)->getPos().x;
 			a -= frogList.at(i)->GetSpeed();
@@ -206,10 +218,8 @@ void Game::update(float dt)
 			for (auto it : frogList) {
 				if (it->isActive)
 				{
-					if (it->getPos().y < visibleSize.height*0.5) {
-
+					if (it->getPos().y < visibleSize.height*0.5 || it->GetHP()<=0) {	
 						it->isActive = false;
-
 						this->removeChild(it->getSprite());
 					}
 				}

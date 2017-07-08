@@ -10,7 +10,7 @@ void Frog::init(TYPE frog, int lane)
 		{
 			HP = 2;
 			damage = 2;
-			speed = 2;
+			speed = randomFloatBetween(0.1f, 0.5f);
 			SetAnimation("frog.plist", "frog_green/%04d.png", 4);
 			break;
 		}
@@ -18,7 +18,7 @@ void Frog::init(TYPE frog, int lane)
 		{
 			HP = 1;
 			damage = 1;
-			speed = 3;
+			speed = randomFloatBetween(0.1f, 0.5f);
 			SetAnimation("frog.plist", "frog_yellow/%04d.png", 4);
 			break;
 		}
@@ -26,7 +26,7 @@ void Frog::init(TYPE frog, int lane)
 		{
 			HP = 3;
 			damage = 2;
-			speed = 1;
+			speed = randomFloatBetween(0.1f, 0.5f);
 			SetAnimation("frog.plist", "frog_blue/%04d.png", 4);
 			break;
 		}
@@ -34,7 +34,7 @@ void Frog::init(TYPE frog, int lane)
 		{
 			HP = 4;
 			damage = 4;
-			speed = 2;
+			speed = randomFloatBetween(0.1f, 0.5f);
 			SetAnimation("frog.plist", "frog_red/%04d.png", 4);
 			break;
 		}
@@ -76,7 +76,6 @@ void Frog::init(TYPE frog, int lane)
 			break;
 	}
 	isDead = false;
-	
 	SetScale(Vec2(3, 3));
 
 	runAnimation();
@@ -133,6 +132,7 @@ int Frog::GetHP(void)
 {
 	return HP;
 }
+
 int Frog::GetDamage(void)
 {
 	return damage;
@@ -145,3 +145,9 @@ bool Frog::GetisDead(void)
 {
 	return isDead;
 }
+float Frog::randomFloatBetween(float smallNumber, float bigNumber) {
+	float diff = bigNumber - smallNumber;
+	return (((float)rand() / RAND_MAX) * diff) + smallNumber;
+
+}
+

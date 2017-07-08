@@ -12,8 +12,7 @@ private:
 	//Stats of the frog
 	int HP;
 	int damage;
-	int speed;
-
+	float speed;
 	//Is the frog ded?
 	bool isDead;
 
@@ -61,14 +60,16 @@ public:
 	//Setter-ish
 	void takeDamage(int amount);
 	void augmentSpeed(float newSpeed);
-
+	float randomFloatBetween(float smallNumber, float bigNumber);
 	//Getter
 	int GetLane(void);
 	int GetHP(void);
 	int GetDamage(void);
+	int GetCount();
 	float GetSpeed(void);
 	bool GetisDead(void);
 	bool isActive = false;
+
 };
 
 #endif
