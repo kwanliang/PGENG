@@ -24,6 +24,20 @@ void SSAnimation::runAnimation()
 	animSprite->runAction(RepeatForever::create(Animate::create(animation)));
 }
 
+void SSAnimation::stopAnimation()
+{
+	//Stop the animation
+	animSprite->stopAllActions();
+    animSprite->runAction(RemoveSelf::create());
+}
+
+void SSAnimation::resetAnimframe()
+{
+    //for (int i = 0; i < animFrames.size(); ++i)
+    //    animFrames.popBack();
+	animFrames.clear();
+}
+
 void SSAnimation::SetPos(Vec2 pos)
 {
 	//Set the pos

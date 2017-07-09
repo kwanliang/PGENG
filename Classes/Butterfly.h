@@ -27,6 +27,7 @@ public:
 
 	void update(float dt);
 	void SendDownLane(int lane);
+	void RemoveSprite();
 
 	//Getter
 	bool GetisCombined(void);

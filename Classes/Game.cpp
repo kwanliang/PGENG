@@ -8,6 +8,7 @@
 
 #include "platform/CCPlatformMacros.h"
 #include <random>
+#include "SpriteSheetAnimation.h"
 
 USING_NS_CC;
 
@@ -47,15 +48,19 @@ bool Game::init()
 
     m_GridMap.init(playingSize);
 
+    auto drawnode = DrawNode::create();
+    drawnode->drawLine(m_GridMap.GetMinPlayingField(), m_GridMap.GetMaxPlayingField(), Color4F(1.0, 0.0, 0.0, 1.0));
+    addChild(drawnode);
+
     auto nodeItems = Node::create();
     nodeItems->setName("nodeItems");
 
     Size sprite_MudSize = Sprite::create("ZigzagGrass_Mud_Round.png")->getContentSize();
 
-	Sprite* Background = Sprite::create("background.png");
-	Background->setAnchorPoint(Vec2::ZERO);
-	Background->setContentSize(visibleSize);
-	this->addChild(Background);
+	//Sprite* Background = Sprite::create("background.png");
+	//Background->setAnchorPoint(Vec2::ZERO);
+	//Background->setContentSize(visibleSize);
+	//this->addChild(Background);
 
     for (int i = 0; i < m_GridMap.GetNumGrid(); ++i)
     {
@@ -113,6 +118,7 @@ bool Game::init()
     auto mouse_listener = EventListenerMouse::create();
     mouse_listener->onMouseDown = CC_CALLBACK_1(Game::onMousePressed, this);
     mouse_listener->onMouseUp = CC_CALLBACK_1(Game::onMouseReleased, this);
+    mouse_listener->onMouseMove = CC_CALLBACK_1(Game::onMouseMove, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouse_listener, this);
 
     this->scheduleUpdate();
@@ -138,33 +144,67 @@ void Game::onMousePressed(Event* event)
         {
             SelectedGrid = m_GridMap.GetGridWithPos(Vec2(e->getCursorX(), e->getCursorY()));
         }
-        else
-        {
-            Grid* temp = m_GridMap.GetGridWithPos(Vec2(e->getCursorX(), e->getCursorY()));
-            if (temp != NULL)
-            {
-                Vec2 tempPos1 = temp->GetPosition();
-                Vec2 tempPos2 = SelectedGrid->GetPosition();
-
-                Vec2 tempSpritePos1 = temp->GetAnimation()->getSprite()->getPosition();
-                Vec2 tempSpritePos2 = SelectedGrid->GetAnimation()->getSprite()->getPosition();
-
-                temp->GetAnimation()->getSprite()->setPosition(tempPos2);
-                SelectedGrid->GetAnimation()->getSprite()->setPosition(tempPos1);
-                temp->SetPosition(tempPos2);
-                SelectedGrid->SetPosition(tempPos1);
-
-				m_GridMap.CheckForMatches();
-
-                SelectedGrid = NULL;
-            }
-        }
     }
 }
 
 void Game::onMouseReleased(Event* event)
 {
+    EventMouse* e = (EventMouse*)event;
+    if (e->getMouseButton() == MOUSE_BUTTON_LEFT)
+    {
+        if (SelectedGrid)
+        {
+            SelectedGrid = NULL;
 
+            m_GridMap.CheckForMatches();
+        }
+    }
+}
+
+void Game::onMouseMove(Event* event)
+{
+    EventMouse* e = (EventMouse*)event;
+    Vec2 CursorPos = Vec2(e->getCursorX(), e->getCursorY());
+    if (SelectedGrid)
+    {
+        //SelectedGrid->GetAnimation()->getSprite()->setPosition(Vec2(e->getCursorX(), e->getCursorY()));
+        Grid* temp = m_GridMap.GetGridWithPos(CursorPos);
+        if (temp != NULL)
+        {           
+            // Switch Position
+            Vec2 tempPos1 = temp->GetPosition();
+            Vec2 tempPos2 = SelectedGrid->GetPosition();
+
+            temp->GetAnimation()->getSprite()->setPosition(tempPos2);
+            SelectedGrid->GetAnimation()->getSprite()->setPosition(tempPos1);
+            temp->SetPosition(tempPos2);
+            SelectedGrid->SetPosition(tempPos1);
+
+            // Switch Index
+            Vec2 tempIndex1 = temp->GetIndex();
+            Vec2 tempIndex2 = SelectedGrid->GetIndex();
+
+            temp->SetIndex(tempIndex2);
+            SelectedGrid->SetIndex(tempIndex1);
+
+            // Switch Type
+            GridType tempType1 = temp->GetType();
+            GridType tempType2 = SelectedGrid->GetType();
+
+            temp->SetType(tempType1);
+            SelectedGrid->SetType(tempType2);
+        }
+        else
+        {
+            if (CursorPos.x < m_GridMap.GetMinPlayingField().x || CursorPos.x > m_GridMap.GetMaxPlayingField().x ||
+                CursorPos.y < m_GridMap.GetMinPlayingField().y || CursorPos.y > m_GridMap.GetMaxPlayingField().y)
+            {
+                SelectedGrid = NULL;
+
+                m_GridMap.CheckForMatches();
+            }
+        }
+    }
 }
 
 Frog* Game::FetchFrog() {
@@ -203,8 +243,6 @@ void Game::update(float dt)
 		frog->init(frogType, lane);
 		this->addChild(frog->getSprite(), 1);
 	}
-			
-	
 	
 	for (int i = 0; i < frogList.size(); i++) {
 

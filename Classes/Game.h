@@ -25,6 +25,7 @@ public:
     virtual void onKeyReleased(EventKeyboard::KeyCode, Event*);
     virtual void onMousePressed(Event*);
     virtual void onMouseReleased(Event*);
+    virtual void onMouseMove(Event*);
 	Frog* FetchFrog();
     // implement the "static create()" method manually
     CREATE_FUNC(Game);

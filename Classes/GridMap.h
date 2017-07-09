@@ -13,19 +13,27 @@ public:
     ~GridMap();
 
     void init(Vec2 windowsize);
+    Butterfly* MakeAnimation(Vec2 pos, GridType type);
 
     void CheckForMatches(void);
-	void CheckSurrondingMatch(int index, int& counter);
+    void CheckSurrondingMatch(Grid* grid);
+    void ResolveMatches(void);
+    Grid* GetGridWithIndex(Vec2 index);
     Grid* GetGridWithPos(Vec2 pos);
 
     inline Grid* GetGrid(int index) { return gridmap[index]; }
     inline Vec2 GetGridSize(void) { return gridsize; }
+    inline Vec2 GetMinPlayingField(void) { return MinPlayingField; }
+    inline Vec2 GetMaxPlayingField(void) { return MaxPlayingField; }
     inline int GetNumGrid(void) { return numgrid; }
+
 
 private:
     std::vector<Grid*> gridmap;
-	std::vector<Grid*> match;
     Vec2 gridsize;
+
+    Vec2 MaxPlayingField;
+    Vec2 MinPlayingField;
 
     int row;
     int column;

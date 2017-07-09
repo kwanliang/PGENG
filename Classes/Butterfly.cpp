@@ -41,6 +41,12 @@ void Butterfly::update(float dt)
 {
 }
 
+void Butterfly::RemoveSprite()
+{
+	stopAnimation();
+	resetAnimframe();
+}
+
 //Setter-ish
 void Butterfly::SendDownLane(int lane)
 {

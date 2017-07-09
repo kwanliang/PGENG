@@ -20,6 +20,8 @@ private:
 public:
 	void SetAnimation(const char *plist, const char *image, int FrameCount);
 	void runAnimation();
+	void stopAnimation();
+	void resetAnimframe();
 
 	//Setter
 	void SetPos(Vec2 pos);
