@@ -3,7 +3,7 @@
 #include "HelloWorldScene.h"
 
 void SSAnimation::SetAnimation(const char *plist, const char *image, int FrameCount)
-{
+{	
 	frames = FrameCount;
 	spritecache = SpriteFrameCache::getInstance();
 	spritecache->addSpriteFramesWithFile(plist);
@@ -24,18 +24,21 @@ void SSAnimation::runAnimation()
 	animSprite->runAction(RepeatForever::create(Animate::create(animation)));
 }
 
-void SSAnimation::stopAnimation()
+void SSAnimation::changeAnimation(const char *image, int FrameCount)
 {
-	//Stop the animation
+	//Stops current animation and clears it
 	animSprite->stopAllActions();
-    animSprite->runAction(RemoveSelf::create());
-}
-
-void SSAnimation::resetAnimframe()
-{
-    //for (int i = 0; i < animFrames.size(); ++i)
-    //    animFrames.popBack();
 	animFrames.clear();
+
+	char str[100];
+	for (int i = 1; i <= FrameCount; i++)
+	{
+		sprintf(str, image, i);
+		animFrames.pushBack(spritecache->getSpriteFrameByName(str));
+	}
+	//animSprite = Sprite::createWithSpriteFrame(animFrames.front());
+	auto animation = Animation::createWithSpriteFrames(animFrames, 1.0f / frames);
+	animSprite->runAction(RepeatForever::create(Animate::create(animation)));
 }
 
 void SSAnimation::SetPos(Vec2 pos)

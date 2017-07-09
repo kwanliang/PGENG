@@ -6,9 +6,6 @@
 class Butterfly : public SSAnimation
 {
 private:
-	//Which lane does the frog belong to?
-	Vec2 Grid;
-
 	//Is the butterfly matched?
 	bool isCombined;
 
@@ -23,11 +20,11 @@ public:
 
 	}BUTTERFLY_TYPE;
 
-	void init(TYPE Butterfly, Vec2 Grid);
+	void init(TYPE Butterfly);
 
 	void update(float dt);
 	void SendDownLane(int lane);
-	void RemoveSprite();
+	void changeSprite(TYPE newType);
 
 	//Getter
 	bool GetisCombined(void);

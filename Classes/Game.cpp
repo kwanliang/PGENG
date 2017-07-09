@@ -109,7 +109,7 @@ bool Game::init()
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 
 	// set the background music and continuously play it.
-	audio->playBackgroundMusic("Sound/BGM.wav", true);
+	//audio->playBackgroundMusic("Sound/BGM.wav", true);
 
     auto keyboard_listener = EventListenerKeyboard::create();
     keyboard_listener->onKeyPressed = CC_CALLBACK_2(Game::onKeyPressed, this);

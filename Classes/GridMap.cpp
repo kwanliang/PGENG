@@ -60,19 +60,19 @@ Butterfly* GridMap::MakeAnimation(Vec2 pos, GridType type)
     switch (type)
     {
     case GREEN:
-        tempAnim->init(Butterfly::TYPE::GREEN, Vec2(1, 1));
+        tempAnim->init(Butterfly::TYPE::GREEN);
         break;
     case BLUE:
-        tempAnim->init(Butterfly::TYPE::BLUE, Vec2(1, 1));
+        tempAnim->init(Butterfly::TYPE::BLUE);
         break;
     case YELLOW:
-        tempAnim->init(Butterfly::TYPE::YELLOW, Vec2(1, 1));
+        tempAnim->init(Butterfly::TYPE::YELLOW);
         break;
     case RED:
-        tempAnim->init(Butterfly::TYPE::RED, Vec2(1, 1));
+        tempAnim->init(Butterfly::TYPE::RED);
         break;
     case RAINBOW:
-        tempAnim->init(Butterfly::TYPE::RAINBOW, Vec2(1, 1));
+        tempAnim->init(Butterfly::TYPE::RAINBOW);
         break;
     default:
         break;
@@ -144,8 +144,7 @@ void GridMap::ResolveMatches(void)
         {
             int tempRand = rand() % 5;
             it->SetType((GridType)tempRand);
-            //it->GetAnimation()->RemoveSprite();//((Butterfly::TYPE)tempRand);
-            //it->SetAnimation(MakeAnimation(it->GetPosition(), (GridType)tempRand));
+            it->GetAnimation()->changeSprite((Butterfly::TYPE)tempRand);
 
             it->SetHaveMatch(false);
         }

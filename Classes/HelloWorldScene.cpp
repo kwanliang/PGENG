@@ -126,35 +126,35 @@ bool HelloWorld::init()
 
 	//TESTING BUTTERFLY
 	Butterfly* greenB = new Butterfly;
-	greenB->init(Butterfly::TYPE::GREEN, Vec2(1, 1));
+	greenB->init(Butterfly::TYPE::GREEN);
 	greenB->SetPos(Vec2(100, 300));
 	greenB->SetScale(Vec2(0.5f, 0.5f));
 	butterflyList.push_back(greenB);
 	this->addChild(greenB->getSprite(), 1);
 
 	Butterfly* yellowB = new Butterfly;
-	yellowB->init(Butterfly::TYPE::YELLOW, Vec2(1, 1));
+	yellowB->init(Butterfly::TYPE::YELLOW);
 	yellowB->SetPos(Vec2(200, 300));
 	yellowB->SetScale(Vec2(0.5f, 0.5f));
 	butterflyList.push_back(yellowB);
 	this->addChild(yellowB->getSprite(), 1);
 
 	Butterfly* blueB = new Butterfly;
-	blueB->init(Butterfly::TYPE::BLUE, Vec2(1, 1));
+	blueB->init(Butterfly::TYPE::BLUE);
 	blueB->SetPos(Vec2(300, 300));
 	blueB->SetScale(Vec2(0.5f, 0.5f));
 	butterflyList.push_back(blueB);
 	this->addChild(blueB->getSprite(), 1);
 
 	Butterfly* redB = new Butterfly;
-	redB->init(Butterfly::TYPE::RED, Vec2(1, 1));
+	redB->init(Butterfly::TYPE::RED);
 	redB->SetPos(Vec2(400, 300));
 	redB->SetScale(Vec2(0.5f, 0.5f));
 	butterflyList.push_back(redB);
 	this->addChild(redB->getSprite(), 1);
 
 	Butterfly* rainbow = new Butterfly;
-	rainbow->init(Butterfly::TYPE::RAINBOW, Vec2(1, 1));
+	rainbow->init(Butterfly::TYPE::RAINBOW);
 	rainbow->SetPos(Vec2(500, 300));
 	rainbow->SetScale(Vec2(0.5f, 0.5f));
 	butterflyList.push_back(rainbow);
