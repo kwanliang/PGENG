@@ -133,7 +133,7 @@ int Frog::GetHP(void)
 	return HP;
 }
 
-int Frog::GetDamage(void)
+float Frog::GetDamage(void)
 {
 	return damage;
 }

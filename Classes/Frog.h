@@ -11,7 +11,7 @@ private:
 
 	//Stats of the frog
 	int HP;
-	int damage;
+	float damage;
 	float speed;
 	//Is the frog ded?
 	bool isDead;
@@ -64,7 +64,7 @@ public:
 	//Getter
 	int GetLane(void);
 	int GetHP(void);
-	int GetDamage(void);
+	float GetDamage(void);
 	int GetCount();
 	float GetSpeed(void);
 	bool GetisDead(void);

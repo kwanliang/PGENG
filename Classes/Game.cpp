@@ -97,14 +97,18 @@ bool Game::init()
 
 	auto nodeTime = Node::create();
 	nodeTime->setName("nodeTime");
+	playerHealth = 10;
 
-	timer.init(10.f);
+	timer.init(playerHealth);
 	frogLimit = 10;
+	currTime = 0.f;
+	maxTime = 0.f;
 
 	nodeTime->addChild(timer.getSprite(), 1);
 	this->addChild(nodeTime, 0);
 
 	isHoldingBlock = false;
+	tookDamage = false;
 
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 
@@ -159,6 +163,7 @@ void Game::onMouseReleased(Event* event)
             m_GridMap.CheckForMatches();
         }
     }
+	isHoldingBlock = true;
 }
 
 void Game::onMouseMove(Event* event)
@@ -205,6 +210,8 @@ void Game::onMouseMove(Event* event)
             }
         }
     }
+	isHoldingBlock = false;
+
 }
 
 Frog* Game::FetchFrog() {
@@ -218,7 +225,7 @@ Frog* Game::FetchFrog() {
 		}
 	}
 
-	for (int i = 0; i < 1; ++i)
+	for (int i = 0; i < 10; ++i)
 	{
 		frogList.push_back(new Frog());
 	}
@@ -234,14 +241,27 @@ void Game::update(float dt)
 		timer.update(dt);
 	}
 
+	if (tookDamage == true){
+		currTime = dt;
+		maxTime += dt;
+		timer.update(currTime);
+	}
+	if (maxTime >= 1.f){
+		tookDamage = false;
+		maxTime = 0;
+	}
+		
+	
+
 	Frog::TYPE frogType = static_cast<Frog::TYPE>(cocos2d::RandomHelper::random_int(0, 3));
 	Frog::LANE lane = static_cast<Frog::LANE>(cocos2d::RandomHelper::random_int(0, 5));
 	
-	
 	if (this->getChildrenCount()<= frogLimit){
+		
 		Frog* frog = FetchFrog();
 		frog->init(frogType, lane);
-		this->addChild(frog->getSprite(), 1);
+		
+		addChild(frog->getSprite(), 1);
 	}
 	
 	for (int i = 0; i < frogList.size(); i++) {
@@ -256,7 +276,14 @@ void Game::update(float dt)
 			for (auto it : frogList) {
 				if (it->isActive)
 				{
-					if (it->getPos().y < visibleSize.height*0.5 || it->GetHP()<=0) {	
+					if (it->getPos().y < visibleSize.height*0.5) {	
+						it->isActive = false;
+						this->removeChild(it->getSprite());
+						
+						playerHealth -= 1;
+						tookDamage = true;
+					}
+					else if (it->GetHP() <= 0){
 						it->isActive = false;
 						this->removeChild(it->getSprite());
 					}
@@ -264,6 +291,9 @@ void Game::update(float dt)
 			}
 		}
 
+	}
+	if (playerHealth <= 0){
+		SceneManager::GetInstance()->SwitchScene(MainMenu::createScene());
 	}
 }
 

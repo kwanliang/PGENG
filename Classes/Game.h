@@ -42,6 +42,7 @@ private:
 	float currTime;
 	int frogLimit;
 	int speed;
-
+	int playerHealth;
+	bool tookDamage;
 	bool isHoldingBlock;
 };
