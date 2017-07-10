@@ -16,6 +16,10 @@ private:
 	//Is the frog ded?
 	bool isDead;
 
+	float currHp;
+	float maxHp;
+	cocos2d::CCProgressTimer* frogHealthBar;
+
 public:
 	//What type is the frog?
 	enum TYPE
@@ -50,6 +54,9 @@ public:
 	}LANE_NUMBER;
 
 	void init(TYPE frog, int lane);
+	void healthBarInit();
+	void runItDown(void);
+
 	void attack(void);
 
 	void update(float dt);
@@ -66,6 +73,7 @@ public:
 	bool GetisDead(void);
 	bool isActive = false;
 
+	cocos2d::CCProgressTimer* getHealthSprite(void) { return frogHealthBar; }
 };
 
 #endif

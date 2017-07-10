@@ -98,7 +98,11 @@ bool Game::init()
 
 	auto nodeTime = Node::create();
 	nodeTime->setName("nodeTime");
+
+
+
 	playerHealth = 10;
+
 
 	//timer.init(playerHealth);
 	//frogLimit = 10;
@@ -108,7 +112,18 @@ bool Game::init()
 	wave.init();
 
 	nodeTime->addChild(wave.timer.getSprite(), 1);
+
+	timer.init(playerHealth);
+
+	nodeTime->addChild(timer.getSprite(),1);
+
 	this->addChild(nodeTime, 0);
+
+	//auto frogHealth = Node::create();
+	//frogHealth->setName("frogHealth");
+	//frogHealthBar.healthBarInit();
+	//frogHealth->addChild(frogHealthBar.getHealthSprite(), 1);
+	//this->addChild(frogHealth, 0);
 
 	isHoldingBlock = false;
 	tookDamage = false;
@@ -168,6 +183,7 @@ void Game::onMousePressed(Event* event)
 
 void Game::onMouseReleased(Event* event)
 {
+
     EventMouse* e = (EventMouse*)event;
     if (e->getMouseButton() == MOUSE_BUTTON_LEFT)
     {
@@ -190,11 +206,34 @@ void Game::onMouseReleased(Event* event)
 			m_GridMap.ResetLaneMatches();
         }
     }
+
+	EventMouse* e = (EventMouse*)event;
+	if (e->getMouseButton() == MOUSE_BUTTON_LEFT)
+	{
+		if (SelectedGrid)
+		{
+			SelectedGrid = NULL;
+
+			m_GridMap.CheckForMatches();
+
+			for (int i = 0; i < 6; ++i)
+			{
+				if (m_GridMap.GetLaneMatches()[i] > 0)
+				{
+					Projectile* projectile = FetchProjectile();
+
+					addChild(projectile->Init(i));
+				}
+			}
+		}
+	}
+
 	isHoldingBlock = true;
 }
 
 void Game::onMouseMove(Event* event)
 {
+
     EventMouse* e = (EventMouse*)event;
     Vec2 CursorPos = Vec2(e->getCursorX(), e->getCursorY());
     if (SelectedGrid)
@@ -255,13 +294,16 @@ void Game::onMouseMove(Event* event)
             }
         }
     }
+
 	isHoldingBlock = false;
 
 }
 
 Frog* Game::FetchFrog() {
+
 	for (auto it : frogList)
 	{
+
 		Frog* temp = it;
 		if (!temp->isActive)
 		{
@@ -324,6 +366,7 @@ void Game::update(float dt)
 	Text << "Score: " << GameInstance::GetInstance()->GetScore();
 	scoreDisplay->setString(Text.str().c_str());
 
+
 	Frog::TYPE frogType = static_cast<Frog::TYPE>(cocos2d::RandomHelper::random_int(0, 3));
 	Frog::LANE lane = static_cast<Frog::LANE>(cocos2d::RandomHelper::random_int(0, 5));
 
@@ -352,10 +395,24 @@ void Game::update(float dt)
 		{
 			frogCount++;
 
+	if (this->getChildrenCount() <= frogLimit) {
+
+		Frog* frog = FetchFrog();
+		frog->init(frogType, lane);
+		frog->healthBarInit();
+		addChild(frog->getSprite(), 1);
+		addChild(frog->getHealthSprite(), 1);
+	}
+
+	for (int i = 0; i < frogList.size(); i++) {
+		if (frogList.at(i)->isActive)
+		{
+
 			float a = frogList.at(i)->getPos().y;
 			float b = frogList.at(i)->getPos().x;
 			a -= frogList.at(i)->GetSpeed();
 			frogList.at(i)->SetPos(Vec2(b, a));
+			frogList.at(i)->getHealthSprite()->setPosition(Vec2(frogList.at(i)->getPos().x, frogList.at(i)->getPos().y + 30));
 			for (auto it : frogList) {
 				if (it->isActive)
 				{
@@ -368,6 +425,8 @@ void Game::update(float dt)
 					}
 					it->update(dt);
 					if (it->GetisDead()) {
+					else if (it->GetHP() <= 0) {
+						it->isActive = false;
 						this->removeChild(it->getSprite());
 					}
 				}
@@ -376,10 +435,10 @@ void Game::update(float dt)
 	}
 
 	wave.update(dt, frogCount);
-
 	if (playerHealth <= 0) {
 		SceneManager::GetInstance()->SwitchScene(MainMenu::createScene());
 	}
+
 
     for (auto it : projectileList)
     {
@@ -414,6 +473,23 @@ void Game::update(float dt)
             //}
         }
     }
+
+	for (auto it : projectileList)
+	{
+		if (it->GetIsActive())
+		{
+			if (it->GetPosition().y > visibleSize.height)
+			{
+				it->SetIsActive(false);
+				this->removeChild(it->GetParticle());
+			}
+			else
+			{
+				it->IncrementPositionY(10.f);
+			}
+		}
+	}
+
 }
 
 void Game::menuCloseCallback(Ref* pSender)
@@ -429,4 +505,8 @@ void Game::menuCloseCallback(Ref* pSender)
 
 	//EventCustom customEndEvent("game_scene_close_event");
 	//_eventDispatcher->dispatchEvent(&customEndEvent);
+
 }
+
+}
+

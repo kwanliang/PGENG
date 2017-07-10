@@ -6,7 +6,7 @@
 #include "GridMap.h"
 #include "Frog.h"
 #include "Butterfly.h"
-#include "WaveSystem.h"
+#include "Timer.h"
 #include <sstream>
 #include "Projectile.h"
 
@@ -40,12 +40,16 @@ private:
 	std::vector<Frog*> frogList;
     std::vector<Projectile*> projectileList;
 
+
 	Wave wave;
 	cocos2d::Label* waveDisplay;
 	std::stringstream Text;
 	cocos2d::Label* scoreDisplay;
 
 	int score;
+
+	CTimer timer;
+	Frog frogHealthBar;
 
 	int speed;
 	int playerHealth;
