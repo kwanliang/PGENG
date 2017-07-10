@@ -26,6 +26,7 @@ public:
 	//Setter
 	void SetPos(Vec2 pos);
 	void SetScale(Vec2 scale);
+	void SetSprite(Sprite* spr);
 
 	//Getter
 	Sprite* getSprite(void) { return animSprite; }

@@ -58,11 +58,11 @@ bool HelloWorld::init()
 	auto nodeChar = Node::create();
 	nodeChar->setName("nodeChar");
 
-	hero.init("Blue_Front1.png", "Sprite_Char", 0, sprite_MudSize.height + playingSize.height * 0.5f);
+	//hero.init("Blue_Front1.png", "Sprite_Char", 0, sprite_MudSize.height + playingSize.height * 0.5f);
 
-	nodeChar->addChild(hero.getSprite(), 1);
+	//nodeChar->addChild(hero.getSprite(), 1);
 
-	this->addChild(nodeChar, 1);
+	//this->addChild(nodeChar, 1);
 
 	auto nodeTime = Node::create();
 	nodeTime->setName("nodeTime");
@@ -309,7 +309,7 @@ void HelloWorld::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 	//	heldKeys.push_back(keyCode);
 	//}
 
-	if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW)
+	/*if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW)
 	{
 		hero.MoveChar(1.f, 0.f);
 	}
@@ -332,7 +332,7 @@ void HelloWorld::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 	if (keyCode == EventKeyboard::KeyCode::KEY_SPACE)
 	{
 		CCDirector::getInstance()->replaceScene(TransitionFade::create(1.5, HelloWorld::createScene(), Color3B(0, 255, 255)));
-	}
+	}*/
 }
 
 void HelloWorld::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
@@ -446,7 +446,7 @@ void HelloWorld::update(float delta)
 	//rendtexSprite->setTexture(rendtex->getSprite()->getTexture());
 	//rendtexSprite->setGLProgram(proPostProcess);
 
-	hero.update(delta);
+	//hero.update(delta);
 	if (isHoldingBlock == true){
 		timer.update(delta);
 	}

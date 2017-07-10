@@ -11,11 +11,14 @@ Projectile::~Projectile()
 
 }
 
-ParticleSystemQuad* Projectile::Init(int lane)
+void Projectile::Init(int lane, int damage)
 {
     isActive = true;
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
+
+	this->lane = lane;
+	this->damage = damage;
 
     switch (lane) {
     case 0:
@@ -52,25 +55,27 @@ ParticleSystemQuad* Projectile::Init(int lane)
         break;
     }
 
+	particle = ParticleSystemQuad::create("projectile.plist");
+	particle->setAnchorPoint(Vec2::ZERO);
+	particle->setPosition(position);
+	particle->setScale(0.1f);
+	particle->setAutoRemoveOnFinish(true);
 
-    particle = ParticleSystemQuad::create("projectile.plist");
-    particle->setAnchorPoint(Vec2::ZERO);
-    particle->setPosition(position);
-    particle->setScale(0.1f);
-    particle->setAutoRemoveOnFinish(true);
+	MoveParticle(1.0f);
 
-    MoveParticle(1.0f);
-
-    return particle;
+	//return getSprite();
 }
 
 void Projectile::MoveParticle(float speed)
 {
-    auto moveEvent = MoveBy::create(speed, Vec2(0, position.y));
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+    auto moveEvent = MoveBy::create(speed, Vec2(0, visibleSize.height));
     particle->runAction(moveEvent);
-    ////Vec2 vec = Vec2(0, 1000);
-    ////auto moveEvent = MoveBy::create(vec.length() * 0.005f, vec);
-    ////particle->runAction(moveEvent);
 
-    //auto move = MoveBy::create(0, Vec2(0, speed));
+	//particle->setPositionY(particle->getPositionY() + speed);
+}
+
+void Projectile::update(float delta)
+{
+	MoveParticle(1.0f);
 }

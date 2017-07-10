@@ -47,6 +47,9 @@ void Frog::init(TYPE frog, int lane)
 		default:
 			break;
 	}
+
+	this->lane = lane;
+
 	switch (lane) {
 		case LANE::LANE1:
 		{

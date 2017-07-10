@@ -168,81 +168,93 @@ void Game::onMousePressed(Event* event)
 
 void Game::onMouseReleased(Event* event)
 {
-	EventMouse* e = (EventMouse*)event;
-	if (e->getMouseButton() == MOUSE_BUTTON_LEFT)
-	{
-		if (SelectedGrid)
-		{
-			SelectedGrid = NULL;
+    EventMouse* e = (EventMouse*)event;
+    if (e->getMouseButton() == MOUSE_BUTTON_LEFT)
+    {
+        if (SelectedGrid)
+        {
+            SelectedGrid = NULL;
 
-			m_GridMap.CheckForMatches();
-
+            m_GridMap.CheckForMatches();     
+            
 			for (int i = 0; i < 6; ++i)
-			{
-				if (m_GridMap.GetLaneMatches()[i] > 0)
-				{
-					Projectile* projectile = FetchProjectile();
+            {
+                if (m_GridMap.GetLaneMatches()[i] > 0)
+                {
+                    Projectile* projectile = FetchProjectile();
+					projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
+					addChild(projectile->GetParticle());
+                }
+            }
 
-					addChild(projectile->Init(i));
-				}
-			}
-		}
-	}
+			m_GridMap.ResetLaneMatches();
+        }
+    }
 	isHoldingBlock = true;
 }
 
 void Game::onMouseMove(Event* event)
 {
-	EventMouse* e = (EventMouse*)event;
-	Vec2 CursorPos = Vec2(e->getCursorX(), e->getCursorY());
-	if (SelectedGrid)
-	{
-		Grid* temp = m_GridMap.GetGridWithPos(CursorPos);
-		if (temp != NULL)
-		{
-			// Switch Position
-			Vec2 tempPos1 = temp->GetPosition();
-			Vec2 tempPos2 = SelectedGrid->GetPosition();
+    EventMouse* e = (EventMouse*)event;
+    Vec2 CursorPos = Vec2(e->getCursorX(), e->getCursorY());
+    if (SelectedGrid)
+    {
+        Grid* temp = m_GridMap.GetGridWithPos(CursorPos);
+        if (temp != NULL)
+        {           
+            // Switch Position
+            Vec2 tempPos1 = temp->GetPosition();
+            Vec2 tempPos2 = SelectedGrid->GetPosition();
 
-			temp->GetAnimation()->getSprite()->setPosition(tempPos2);
-			SelectedGrid->GetAnimation()->getSprite()->setPosition(tempPos1);
-			temp->SetPosition(tempPos2);
-			SelectedGrid->SetPosition(tempPos1);
+            temp->GetAnimation()->getSprite()->setPosition(tempPos2);
+            SelectedGrid->GetAnimation()->getSprite()->setPosition(tempPos1);
+            temp->SetPosition(tempPos2);
+            SelectedGrid->SetPosition(tempPos1);
 
-			// Switch Index
-			Vec2 tempIndex1 = temp->GetIndex();
-			Vec2 tempIndex2 = SelectedGrid->GetIndex();
+            // Switch Index
+            Vec2 tempIndex1 = temp->GetIndex();
+            Vec2 tempIndex2 = SelectedGrid->GetIndex();
 
-			temp->SetIndex(tempIndex2);
-			SelectedGrid->SetIndex(tempIndex1);
+            temp->SetIndex(tempIndex2);
+            SelectedGrid->SetIndex(tempIndex1);
 
-			// Switch Type
-			GridType tempType1 = temp->GetType();
-			GridType tempType2 = SelectedGrid->GetType();
+            // Switch Type
+            GridType tempType1 = temp->GetType();
+            GridType tempType2 = SelectedGrid->GetType();
 
-			temp->SetType(tempType1);
-			SelectedGrid->SetType(tempType2);
+            temp->SetType(tempType1);
+            SelectedGrid->SetType(tempType2);
 
-			// Switch Lane
-			int tempLane1 = temp->GetLane();
-			int tempLane2 = SelectedGrid->GetLane();
+            // Switch Lane
+            int tempLane1 = temp->GetLane();
+            int tempLane2 = SelectedGrid->GetLane();
 
-			temp->SetLane(tempLane2);
-			SelectedGrid->SetLane(tempLane1);
-		}
-		else
-		{
-			if (CursorPos.x < m_GridMap.GetMinPlayingField().x || CursorPos.x > m_GridMap.GetMaxPlayingField().x ||
-				CursorPos.y < m_GridMap.GetMinPlayingField().y || CursorPos.y > m_GridMap.GetMaxPlayingField().y)
-			{
-				SelectedGrid = NULL;
+            temp->SetLane(tempLane2);
+            SelectedGrid->SetLane(tempLane1);
+        }
+        else
+        {
+            if (CursorPos.x < m_GridMap.GetMinPlayingField().x || CursorPos.x > m_GridMap.GetMaxPlayingField().x ||
+                CursorPos.y < m_GridMap.GetMinPlayingField().y || CursorPos.y > m_GridMap.GetMaxPlayingField().y)
+            {
+                SelectedGrid = NULL;
 
-				m_GridMap.CheckForMatches();
+                m_GridMap.CheckForMatches();
+				
+				for (int i = 0; i < 6; ++i)
+				{
+					if (m_GridMap.GetLaneMatches()[i] > 0)
+					{
+						Projectile* projectile = FetchProjectile();
+						projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
+						addChild(projectile->GetParticle());
+					}
+				}
 
-				//addChild(ParticleManager::GetInstance()->SpawnParticle());
-			}
-		}
-	}
+				m_GridMap.ResetLaneMatches();
+            }
+        }
+    }
 	isHoldingBlock = false;
 
 }
@@ -366,21 +378,39 @@ void Game::update(float dt)
 		SceneManager::GetInstance()->SwitchScene(MainMenu::createScene());
 	}
 
-	for (auto it : projectileList)
-	{
-		if (it->GetIsActive())
-		{
-			if (it->GetPosition().y > visibleSize.height)
+    for (auto it : projectileList)
+    {
+        if (it->GetIsActive())
+        {
+			it->IncrementPositionY(15.f);
+			//it->MoveParticle(1.0f);
+			//it->update(dt);
+
+			for (auto frogit : frogList)
 			{
-				it->SetIsActive(false);
-				this->removeChild(it->GetParticle());
+				if (frogit->isActive)
+				{
+					if (frogit->GetLane() == it->GetLane())
+					{
+						if (frogit->getSprite()->getBoundingBox().containsPoint(it->GetPosition()))
+						{
+							frogit->takeDamage(it->GetDamage());
+
+							it->SetIsActive(false);
+							this->removeChild(it->GetParticle());
+						}
+
+					}
+				}
 			}
-			else
-			{
-				it->IncrementPositionY(10.f);
-			}
-		}
-	}
+
+            //if (it->GetParticle()->getPosition().y > visibleSize.height)
+            //{
+            //    it->SetIsActive(false);
+            //    this->removeChild(it->GetParticle());
+            //}
+        }
+    }
 }
 
 void Game::menuCloseCallback(Ref* pSender)

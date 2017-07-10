@@ -60,3 +60,8 @@ void SSAnimation::SetScale(Vec2 scale)
 	animSprite->setScaleX(this->scale.x);
 	animSprite->setScaleY(this->scale.y);
 }
+
+void SSAnimation::SetSprite(Sprite* spr)
+{
+	this->animSprite = spr;
+}
