@@ -21,6 +21,7 @@ public:
 	void SetAnimation(const char *plist, const char *image, int FrameCount);
 	void runAnimation();
 	void changeAnimation(const char *image, int FrameCount);
+	void clearFrames();
 
 	//Setter
 	void SetPos(Vec2 pos);

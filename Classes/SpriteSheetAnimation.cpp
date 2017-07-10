@@ -41,6 +41,11 @@ void SSAnimation::changeAnimation(const char *image, int FrameCount)
 	animSprite->runAction(RepeatForever::create(Animate::create(animation)));
 }
 
+void SSAnimation::clearFrames()
+{
+	animFrames.clear();
+}
+
 void SSAnimation::SetPos(Vec2 pos)
 {
 	//Set the pos

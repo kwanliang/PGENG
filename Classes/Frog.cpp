@@ -3,6 +3,8 @@
 void Frog::init(TYPE frog, int lane)
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
+
+	clearFrames();
 	//STATS ARE GONNA BE CHANGED WHEN GAMEPLAY IS IMPLETEMENTED FOR GAME BALANCING
 	switch (frog)
 	{
@@ -10,7 +12,8 @@ void Frog::init(TYPE frog, int lane)
 		{
 			HP = 2;
 			damage = 2;
-			speed = randomFloatBetween(0.1f, 0.5f);
+			//speed = randomFloatBetween(0.1f, 0.5f);
+			speed = 0.2f;
 			SetAnimation("frog.plist", "frog_green/%04d.png", 4);
 			break;
 		}
@@ -18,7 +21,8 @@ void Frog::init(TYPE frog, int lane)
 		{
 			HP = 1;
 			damage = 1;
-			speed = randomFloatBetween(0.1f, 0.5f);
+			//speed = randomFloatBetween(0.1f, 0.5f);
+			speed = 0.5f;
 			SetAnimation("frog.plist", "frog_yellow/%04d.png", 4);
 			break;
 		}
@@ -26,7 +30,8 @@ void Frog::init(TYPE frog, int lane)
 		{
 			HP = 3;
 			damage = 2;
-			speed = randomFloatBetween(0.1f, 0.5f);
+			//speed = randomFloatBetween(0.1f, 0.5f);
+			speed = 0.1f;
 			SetAnimation("frog.plist", "frog_blue/%04d.png", 4);
 			break;
 		}
@@ -34,7 +39,8 @@ void Frog::init(TYPE frog, int lane)
 		{
 			HP = 4;
 			damage = 4;
-			speed = randomFloatBetween(0.1f, 0.5f);
+			//speed = randomFloatBetween(0.1f, 0.5f);
+			speed = 0.4f;
 			SetAnimation("frog.plist", "frog_red/%04d.png", 4);
 			break;
 		}

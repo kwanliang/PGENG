@@ -16,6 +16,7 @@ public:
 	void reset(float timeAmt);
 	
 	void update(float delta);
-
+	
+	float getcurrTime() { return currTime; }
 	cocos2d::CCProgressTimer* getSprite(void) { return progressTimer; }
 };
