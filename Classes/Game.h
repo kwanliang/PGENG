@@ -45,6 +45,8 @@ private:
 	std::stringstream Text;
 	cocos2d::Label* scoreDisplay;
 
+	int score;
+
 	int speed;
 	int playerHealth;
 	bool tookDamage;

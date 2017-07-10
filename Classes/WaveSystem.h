@@ -21,7 +21,7 @@ public:
 	int currFrog;
 
 	void init();
-	void update(float delta);
+	void update(float delta, int frogAlive);
 	void updateInterval();
 
 	//Should a frog spawn?

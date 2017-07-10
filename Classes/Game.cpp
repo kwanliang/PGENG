@@ -316,14 +316,12 @@ void Game::update(float dt)
 	//	maxTime = 0;
 	//}
 
-	wave.update(dt);
-
 	Text.str("");
 	Text << "Wave " << wave.getWave();
 	waveDisplay->setString(Text.str().c_str());
 
 	Text.str("");
-	Text << "Score: ";
+	Text << "Score: " << GameInstance::GetInstance()->GetScore();
 	scoreDisplay->setString(Text.str().c_str());
 
 	Frog::TYPE frogType = static_cast<Frog::TYPE>(cocos2d::RandomHelper::random_int(0, 3));
@@ -348,9 +346,11 @@ void Game::update(float dt)
 		}
 	}
 
+	int frogCount = 0;
 	for (int i = 0; i < frogList.size(); i++) {
 		if (frogList.at(i)->isActive)
 		{
+			frogCount++;
 
 			float a = frogList.at(i)->getPos().y;
 			float b = frogList.at(i)->getPos().x;
@@ -366,14 +366,17 @@ void Game::update(float dt)
 						playerHealth -= 1;
 						tookDamage = true;
 					}
-					else if (it->GetHP() <= 0) {
-						it->isActive = false;
+					it->update(dt);
+					if (it->GetisDead()) {
 						this->removeChild(it->getSprite());
 					}
 				}
 			}
 		}
 	}
+
+	wave.update(dt, frogCount);
+
 	if (playerHealth <= 0) {
 		SceneManager::GetInstance()->SwitchScene(MainMenu::createScene());
 	}

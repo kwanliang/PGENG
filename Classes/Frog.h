@@ -50,10 +50,7 @@ public:
 	}LANE_NUMBER;
 
 	void init(TYPE frog, int lane);
-	void runItDown(void);
 	void attack(void);
-
-	TYPE setFrog(TYPE frog);
 
 	void update(float dt);
 
@@ -65,7 +62,6 @@ public:
 	int GetLane(void);
 	int GetHP(void);
 	float GetDamage(void);
-	int GetCount();
 	float GetSpeed(void);
 	bool GetisDead(void);
 	bool isActive = false;

@@ -1,4 +1,5 @@
 #include "Frog.h"
+#include "GameInstance.h"
 
 void Frog::init(TYPE frog, int lane)
 {
@@ -90,14 +91,6 @@ void Frog::init(TYPE frog, int lane)
 	runAnimation();
 }
 
-void Frog::runItDown(void)
-{
-	auto move = MoveBy::create(0, Vec2(0, speed));
-	
-	
-	//run down the lane
-}
-
 void Frog::attack(void)
 {
 	//attack the barrier, attack delay MIGHT be added next time idk
@@ -107,11 +100,11 @@ void Frog::update(float dt)
 {
 	if (HP <= 0)
 	{
+		GameInstance::GetInstance()->IncrementScore();
+		isActive = false;
 		isDead = true;
 		return;
 	}
-	runItDown();
-	//runAnimation();
 }
 
 //Setter-ish

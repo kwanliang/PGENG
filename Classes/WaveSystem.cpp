@@ -17,14 +17,14 @@ void Wave::init()
 	frogLimit = 2 + waveNumber;
 }
 
-void Wave::update(float delta)
+void Wave::update(float delta, int frogsAlive)
 {
 	//Times up
 	if (timer.getcurrTime() <= 0.0f)
 	{
 		resetWaveLogic();
 	}
-	if (currFrog == frogLimit)
+	if ((currFrog == frogLimit) && frogsAlive == 0)
 	{
 		resetWaveLogic();
 	}
