@@ -5,10 +5,8 @@
 #include "GameInstance.h"
 #include "MainMenu.h"
 
-
 #include "platform/CCPlatformMacros.h"
 #include <random>
-#include "SpriteSheetAnimation.h"
 
 USING_NS_CC;
 
@@ -36,6 +34,9 @@ bool Game::init()
     {
         return false;
     }
+
+    // Random seed
+    srand(time(NULL));
 
     SelectedGrid = NULL;
 
@@ -160,7 +161,17 @@ void Game::onMouseReleased(Event* event)
         {
             SelectedGrid = NULL;
 
-            m_GridMap.CheckForMatches();
+            m_GridMap.CheckForMatches();     
+
+            for (int i = 0; i < 6; ++i)
+            {
+                if (m_GridMap.GetLaneMatches()[i] > 0)
+                {
+                    Projectile* projectile = FetchProjectile();
+
+                    addChild(projectile->Init(i));
+                }
+            }
         }
     }
 	isHoldingBlock = true;
@@ -172,7 +183,6 @@ void Game::onMouseMove(Event* event)
     Vec2 CursorPos = Vec2(e->getCursorX(), e->getCursorY());
     if (SelectedGrid)
     {
-        //SelectedGrid->GetAnimation()->getSprite()->setPosition(Vec2(e->getCursorX(), e->getCursorY()));
         Grid* temp = m_GridMap.GetGridWithPos(CursorPos);
         if (temp != NULL)
         {           
@@ -198,6 +208,13 @@ void Game::onMouseMove(Event* event)
 
             temp->SetType(tempType1);
             SelectedGrid->SetType(tempType2);
+
+            // Switch Lane
+            int tempLane1 = temp->GetLane();
+            int tempLane2 = SelectedGrid->GetLane();
+
+            temp->SetLane(tempLane2);
+            SelectedGrid->SetLane(tempLane1);
         }
         else
         {
@@ -207,6 +224,8 @@ void Game::onMouseMove(Event* event)
                 SelectedGrid = NULL;
 
                 m_GridMap.CheckForMatches();
+
+                //addChild(ParticleManager::GetInstance()->SpawnParticle());
             }
         }
     }
@@ -234,6 +253,26 @@ Frog* Game::FetchFrog() {
 	return froggie;
 }
 
+Projectile* Game::FetchProjectile() {
+    for (auto it : projectileList)
+    {
+        Projectile* temp = it;
+        if (!temp->GetIsActive())
+        {
+            temp->SetIsActive(true);
+            return temp;
+        }
+    }
+
+    for (int i = 0; i < 10; ++i)
+    {
+        projectileList.push_back(new Projectile());
+    }
+    Projectile* projectile = projectileList.back();
+    projectile->SetIsActive(true);
+    return projectile;
+}
+
 void Game::update(float dt)
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -250,8 +289,6 @@ void Game::update(float dt)
 		tookDamage = false;
 		maxTime = 0;
 	}
-		
-	
 
 	Frog::TYPE frogType = static_cast<Frog::TYPE>(cocos2d::RandomHelper::random_int(0, 3));
 	Frog::LANE lane = static_cast<Frog::LANE>(cocos2d::RandomHelper::random_int(0, 5));
@@ -265,7 +302,6 @@ void Game::update(float dt)
 	}
 	
 	for (int i = 0; i < frogList.size(); i++) {
-
 		if (frogList.at(i)->isActive)
 		{
 			
@@ -290,11 +326,26 @@ void Game::update(float dt)
 				}
 			}
 		}
-
 	}
 	if (playerHealth <= 0){
 		SceneManager::GetInstance()->SwitchScene(MainMenu::createScene());
 	}
+
+    for (auto it : projectileList)
+    {
+        if (it->GetIsActive())
+        {
+            if (it->GetPosition().y > visibleSize.height)
+            {
+                it->SetIsActive(false);
+                this->removeChild(it->GetParticle());
+            }
+            else
+            {
+                it->IncrementPositionY(10.f);
+            }
+        }
+    }
 }
 
 void Game::menuCloseCallback(Ref* pSender)

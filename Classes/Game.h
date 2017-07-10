@@ -7,6 +7,7 @@
 #include "Frog.h"
 #include "Butterfly.h"
 #include "Timer.h"
+#include "Projectile.h"
 
 using namespace cocos2d;
 
@@ -27,6 +28,7 @@ public:
     virtual void onMouseReleased(Event*);
     virtual void onMouseMove(Event*);
 	Frog* FetchFrog();
+    Projectile* FetchProjectile();
     // implement the "static create()" method manually
     CREATE_FUNC(Game);
 
@@ -35,6 +37,7 @@ private:
     Grid* SelectedGrid;
 
 	std::vector<Frog*> frogList;
+    std::vector<Projectile*> projectileList;
 
 	CTimer timer;
 

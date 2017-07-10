@@ -18,10 +18,12 @@ public:
     void CheckForMatches(void);
     void CheckSurrondingMatch(Grid* grid);
     void ResolveMatches(void);
+    void ResetLaneMatches(void);
     Grid* GetGridWithIndex(Vec2 index);
     Grid* GetGridWithPos(Vec2 pos);
 
     inline Grid* GetGrid(int index) { return gridmap[index]; }
+    inline int* GetLaneMatches(void) { return LaneMatches; }
     inline Vec2 GetGridSize(void) { return gridsize; }
     inline Vec2 GetMinPlayingField(void) { return MinPlayingField; }
     inline Vec2 GetMaxPlayingField(void) { return MaxPlayingField; }
@@ -30,6 +32,7 @@ public:
 
 private:
     std::vector<Grid*> gridmap;
+    int LaneMatches[6];
     Vec2 gridsize;
 
     Vec2 MaxPlayingField;

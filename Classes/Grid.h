@@ -25,6 +25,7 @@ public:
     inline Vec2 GetIndex(void) { return index; }
     inline Butterfly* GetAnimation(void) { return animation; }
 	inline Sprite* GetSprite(void) { return lilypad; }
+    inline int GetLane(void) { return lane; }
     inline bool GetHaveMatch(void) { return HaveMatch; }
 
     inline void SetType(GridType type) { this->type = type; }
@@ -32,6 +33,7 @@ public:
     inline void SetIndex(Vec2 index) { this->index = index; }
 	inline void SetSprite(Sprite* spr) { this->lilypad = spr; }
     inline void SetAnimation(Butterfly* spr) { this->animation = spr; }
+    inline void SetLane(int lane) { this->lane = lane; }
     inline void SetHaveMatch(bool match) { this->HaveMatch = match; }
 
 private:
@@ -40,5 +42,6 @@ private:
     Vec2 position;
 	Sprite* lilypad;
 	Butterfly* animation;
+    int lane;
     bool HaveMatch;
 };

@@ -1,5 +1,6 @@
 #include "GridMap.h"
 
+
 GridMap::GridMap()
 {
 
@@ -12,6 +13,8 @@ GridMap::~GridMap()
 
 void GridMap::init(Vec2 windowsize)
 {
+    ResetLaneMatches();
+
     row = 5;
     column = 6;
     numgrid = row * column;
@@ -30,6 +33,7 @@ void GridMap::init(Vec2 windowsize)
             tempGrid->SetIndex(Vec2(x, y));
             int tempRand = rand() % 5;
             tempGrid->SetType((GridType)tempRand);
+            tempGrid->SetLane(x);
             tempGrid->SetHaveMatch(false);
 
 			auto lilypad = Sprite::create("lilypad.png");
@@ -107,28 +111,14 @@ void GridMap::CheckSurrondingMatch(Grid* grid)
             if (abs(x) != abs(y))
             {
                 Vec2 tempIndex = Vec2(grid->GetIndex().x + x, grid->GetIndex().y + y);
-                //y * column + x
+
                 if (tempIndex.x >= 0 && tempIndex.y >= 0 && tempIndex.x < column && tempIndex.y < row)
                 {
                     Grid* GridChecker = GetGridWithIndex(tempIndex);
-                    //if (grid != GridChecker)
+                    if (grid->GetType() == GridChecker->GetType())
                     {
-                        if (tempIndex.y * column + tempIndex.x == 29)
-                            GridChecker->GetType();
-                        if (grid->GetType() == GridChecker->GetType())
-                        {
-                            grid->SetHaveMatch(true);
-                            return;
-                        }
-                        //{
-                        //    counter++;
-                        //}
-
-                        //if (counter >= 2)
-                        //{
-                        //grid->SetHaveMatch(true);
-                        //return;
-                        //}
+                        grid->SetHaveMatch(true);
+                        return;
                     }
                 }
             }
@@ -142,12 +132,22 @@ void GridMap::ResolveMatches(void)
     {
         if (it->GetHaveMatch())
         {
+            LaneMatches[it->GetLane()]++;
+
             int tempRand = rand() % 5;
             it->SetType((GridType)tempRand);
-            it->GetAnimation()->changeSprite((Butterfly::TYPE)tempRand);
+            it->GetAnimation()->changeSprite((Butterfly::TYPE)tempRand);   
 
             it->SetHaveMatch(false);
         }
+    }
+}
+
+void GridMap::ResetLaneMatches(void)
+{
+    for (int i = 0; i < 6; ++i)
+    {
+        LaneMatches[i] = 0;
     }
 }
 
