@@ -207,27 +207,6 @@ void Game::onMouseReleased(Event* event)
         }
     }
 
-	EventMouse* e = (EventMouse*)event;
-	if (e->getMouseButton() == MOUSE_BUTTON_LEFT)
-	{
-		if (SelectedGrid)
-		{
-			SelectedGrid = NULL;
-
-			m_GridMap.CheckForMatches();
-
-			for (int i = 0; i < 6; ++i)
-			{
-				if (m_GridMap.GetLaneMatches()[i] > 0)
-				{
-					Projectile* projectile = FetchProjectile();
-
-					addChild(projectile->Init(i));
-				}
-			}
-		}
-	}
-
 	isHoldingBlock = true;
 }
 
@@ -384,30 +363,19 @@ void Game::update(float dt)
 		{
 			Frog* frog = FetchFrog();
 			frog->init(frogType, lane);
-			this->addChild(frog->getSprite(), 1);
+			frog->healthBarInit();
+			addChild(frog->getSprite(), 1);
+			addChild(frog->getHealthSprite(), 1);
 			wave.currFrog++;
 		}
 	}
 
 	int frogCount = 0;
+
 	for (int i = 0; i < frogList.size(); i++) {
 		if (frogList.at(i)->isActive)
 		{
 			frogCount++;
-
-	if (this->getChildrenCount() <= frogLimit) {
-
-		Frog* frog = FetchFrog();
-		frog->init(frogType, lane);
-		frog->healthBarInit();
-		addChild(frog->getSprite(), 1);
-		addChild(frog->getHealthSprite(), 1);
-	}
-
-	for (int i = 0; i < frogList.size(); i++) {
-		if (frogList.at(i)->isActive)
-		{
-
 			float a = frogList.at(i)->getPos().y;
 			float b = frogList.at(i)->getPos().x;
 			a -= frogList.at(i)->GetSpeed();
@@ -425,9 +393,8 @@ void Game::update(float dt)
 					}
 					it->update(dt);
 					if (it->GetisDead()) {
-					else if (it->GetHP() <= 0) {
-						it->isActive = false;
 						this->removeChild(it->getSprite());
+						this->removeChild(it->getHealthSprite());
 					}
 				}
 			}
@@ -439,14 +406,11 @@ void Game::update(float dt)
 		SceneManager::GetInstance()->SwitchScene(MainMenu::createScene());
 	}
 
-
     for (auto it : projectileList)
     {
         if (it->GetIsActive())
         {
-			it->IncrementPositionY(15.f);
-			//it->MoveParticle(1.0f);
-			//it->update(dt);
+			it->IncrementPositionY(5.f);
 
 			for (auto frogit : frogList)
 			{
@@ -466,11 +430,11 @@ void Game::update(float dt)
 				}
 			}
 
-            //if (it->GetParticle()->getPosition().y > visibleSize.height)
-            //{
-            //    it->SetIsActive(false);
-            //    this->removeChild(it->GetParticle());
-            //}
+            if (it->GetPosition().y > visibleSize.height)
+            {
+                it->SetIsActive(false);
+                this->removeChild(it->GetParticle());
+            }
         }
     }
 
@@ -507,6 +471,3 @@ void Game::menuCloseCallback(Ref* pSender)
 	//_eventDispatcher->dispatchEvent(&customEndEvent);
 
 }
-
-}
-

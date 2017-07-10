@@ -1,14 +1,15 @@
 #pragma once
 
 #include <vector>
+#include <sstream>
 #include <SimpleAudioEngine.h>
 #include "cocos2d.h"
 #include "GridMap.h"
 #include "Frog.h"
 #include "Butterfly.h"
 #include "Timer.h"
-#include <sstream>
 #include "Projectile.h"
+#include "WaveSystem.h"
 
 using namespace cocos2d;
 

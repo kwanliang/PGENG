@@ -9,55 +9,12 @@ void Frog::init(TYPE frog, int lane)
 	//STATS ARE GONNA BE CHANGED WHEN GAMEPLAY IS IMPLETEMENTED FOR GAME BALANCING
 	switch (frog)
 	{
-		case TYPE::GREEN:
-		{
-			HP = 2;
-			damage = 2;
-			//speed = randomFloatBetween(0.1f, 0.5f);
-			speed = 0.2f;
-			SetAnimation("frog.plist", "frog_green/%04d.png", 4);
-			break;
-		}
-		case TYPE::YELLOW:
-		{
-			HP = 1;
-			damage = 1;
-			//speed = randomFloatBetween(0.1f, 0.5f);
-			speed = 0.5f;
-			SetAnimation("frog.plist", "frog_yellow/%04d.png", 4);
-			break;
-		}
-		case TYPE::BLUE:
-		{
-			HP = 3;
-			damage = 2;
-			//speed = randomFloatBetween(0.1f, 0.5f);
-			speed = 0.1f;
-			SetAnimation("frog.plist", "frog_blue/%04d.png", 4);
-			break;
-		}
-		case TYPE::RED:
-		{
-			HP = 4;
-			damage = 4;
-			//speed = randomFloatBetween(0.1f, 0.5f);
-			speed = 0.4f;
-			SetAnimation("frog.plist", "frog_red/%04d.png", 4);
-			break;
-		}
-		default:
-			break;
-	
-	//STATS ARE GONNA BE CHANGED WHEN GAMEPLAY IS IMPLETEMENTED FOR GAME BALANCING
-	switch (frog)
-	{
 	case TYPE::GREEN:
 	{
 		HP = 2;
 		damage = 2;
-		speed = randomFloatBetween(0.1f, 0.5f);
-		//healthBarInit();
-
+		//speed = randomFloatBetween(0.1f, 0.5f);
+		speed = 0.2f;
 		SetAnimation("frog.plist", "frog_green/%04d.png", 4);
 		break;
 	}
@@ -65,9 +22,8 @@ void Frog::init(TYPE frog, int lane)
 	{
 		HP = 1;
 		damage = 1;
-		speed = randomFloatBetween(0.1f, 0.5f);
-		//healthBarInit();
-
+		//speed = randomFloatBetween(0.1f, 0.5f);
+		speed = 0.5f;
 		SetAnimation("frog.plist", "frog_yellow/%04d.png", 4);
 		break;
 	}
@@ -75,9 +31,8 @@ void Frog::init(TYPE frog, int lane)
 	{
 		HP = 3;
 		damage = 2;
-		speed = randomFloatBetween(0.1f, 0.5f);
-		//healthBarInit();
-
+		//speed = randomFloatBetween(0.1f, 0.5f);
+		speed = 0.1f;
 		SetAnimation("frog.plist", "frog_blue/%04d.png", 4);
 		break;
 	}
@@ -85,9 +40,8 @@ void Frog::init(TYPE frog, int lane)
 	{
 		HP = 4;
 		damage = 4;
-		speed = randomFloatBetween(0.1f, 0.5f);
-		//healthBarInit();
-
+		//speed = randomFloatBetween(0.1f, 0.5f);
+		speed = 0.4f;
 		SetAnimation("frog.plist", "frog_red/%04d.png", 4);
 		break;
 	}
@@ -137,21 +91,6 @@ void Frog::init(TYPE frog, int lane)
 	runAnimation();
 }
 
-
-void Frog::runItDown(void)
-{
-	auto move = MoveBy::create(0, Vec2(0, speed));
-
-
-	//run down the lane
-}
-
-
-void Frog::attack(void)
-{
-	//attack the barrier, attack delay MIGHT be added next time idk
-}
-
 void Frog::update(float dt)
 {
 	if (HP <= 0)
@@ -160,13 +99,10 @@ void Frog::update(float dt)
 		isActive = false;
 		isDead = true;
 		return;
-	}
-	
+	}	
 
 	//currHp -= GetDamage();
 	//frogHealthBar->setPercentage(100 * (currHp / maxHp));
-	runItDown();
-	//runAnimation();
 }
 
 //Setter-ish
