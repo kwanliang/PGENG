@@ -52,6 +52,11 @@ private:
 	CTimer timer;
 	Frog frogHealthBar;
 
+	//Health stuff
+	float frogLimit;
+	float currHealth;
+	float maxHealth;
+
 	int speed;
 	int playerHealth;
 	bool tookDamage;

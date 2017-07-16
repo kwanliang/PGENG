@@ -108,17 +108,14 @@ bool Game::init()
 
 	playerHealth = 10;
 
-	//timer.init(playerHealth);
-	//frogLimit = 10;
-	//currTime = 0.f;
-	//maxTime = 0.f;
+
+	timer.init(playerHealth);
+	currHealth = 0.f;
+	maxHealth = 0.f;
 
 	wave.init();
 
-	nodeTime->addChild(wave.timer.getSprite(), 1);
-
-	timer.init(playerHealth);
-
+	//nodeTime->addChild(wave.timer.getSprite(), 1);
 	nodeTime->addChild(timer.getSprite(),1);
 
 	this->addChild(nodeTime, 0);
@@ -183,6 +180,7 @@ void Game::onMousePressed(Event* event)
 			SelectedGrid = m_GridMap.GetGridWithPos(Vec2(e->getCursorX(), e->getCursorY()));
 		}
 	}
+	isHoldingBlock = true;
 }
 
 void Game::onMouseReleased(Event* event)
@@ -216,6 +214,7 @@ void Game::onMouseReleased(Event* event)
 
 void Game::onMouseMove(Event* event)
 {
+
     EventMouse* e = (EventMouse*)event;
     Vec2 CursorPos = Vec2(e->getCursorX(), e->getCursorY());
     if (SelectedGrid)
@@ -297,19 +296,19 @@ Projectile* Game::FetchProjectile() {
 void Game::update(float dt)
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
-	//if (isHoldingBlock == true) {
-	//	timer.update(dt);
-	//}
+	if (isHoldingBlock == true) {
+		timer.update(dt);
+	}
 
-	//if (tookDamage == true){
-	//	currTime = dt;
-	//	maxTime += dt;
-	//	timer.update(currTime);
-	//}
-	//if (maxTime >= 1.f){
-	//	tookDamage = false;
-	//	maxTime = 0;
-	//}
+	if (tookDamage == true){
+		currHealth = dt;
+		maxHealth += dt;
+		timer.update(currHealth);
+	}
+	if (maxHealth >= 1.f){
+		tookDamage = false;
+		maxHealth = 0;
+	}
 
 	Text.str("");
 	Text << "Wave " << wave.getWave();
@@ -362,7 +361,7 @@ void Game::update(float dt)
 					if (it->getPos().y < visibleSize.height*0.5) {
 						it->isActive = false;
 						this->removeChild(it->getSprite());
-
+						this->removeChild(it->getHealthSprite());
 						playerHealth -= 1;
 						tookDamage = true;
 					}
