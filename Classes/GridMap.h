@@ -16,7 +16,10 @@ public:
     Butterfly* MakeAnimation(Vec2 pos, GridType type);
 
     void CheckForMatches(void);
-    void CheckSurrondingMatch(Grid* grid);
+    void CheckSurrondingMatch(Grid* grid, std::list<Grid*>& counter);
+    void SwitchGrid(Grid* grid1, Grid* grid2);
+    bool SwapAnimation(Grid* grid1, Grid* grid2, float dt);
+    void ResetGrid(Grid* grid);
     void ResolveMatches(void);
     void ResetLaneMatches(void);
     Grid* GetGridWithIndex(Vec2 index);
@@ -29,9 +32,11 @@ public:
     inline Vec2 GetMaxPlayingField(void) { return MaxPlayingField; }
     inline int GetNumGrid(void) { return numgrid; }
 
+    void update(float dt);
 
 private:
     std::vector<Grid*> gridmap;
+    std::list<std::pair<Grid*, Grid*>> swapmap;
     int LaneMatches[6];
     Vec2 gridsize;
 

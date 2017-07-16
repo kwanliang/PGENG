@@ -26,7 +26,8 @@ public:
     inline Butterfly* GetAnimation(void) { return animation; }
 	inline Sprite* GetSprite(void) { return lilypad; }
     inline int GetLane(void) { return lane; }
-    inline bool GetHaveMatch(void) { return HaveMatch; }
+    inline bool GetIsIterated(void) { return IsIterated; }
+    inline bool GetHasMatch(void) { return HasMatch; }
 
     inline void SetType(GridType type) { this->type = type; }
     inline void SetPosition(Vec2 pos) { this->position = pos; }
@@ -34,7 +35,8 @@ public:
 	inline void SetSprite(Sprite* spr) { this->lilypad = spr; }
     inline void SetAnimation(Butterfly* spr) { this->animation = spr; }
     inline void SetLane(int lane) { this->lane = lane; }
-    inline void SetHaveMatch(bool match) { this->HaveMatch = match; }
+    inline void SetIsIterated(bool iterated) { this->IsIterated = iterated; }
+    inline void SetHasMatch(bool match) { this->HasMatch = match; }
 
 private:
     GridType type;
@@ -43,5 +45,6 @@ private:
 	Sprite* lilypad;
 	Butterfly* animation;
     int lane;
-    bool HaveMatch;
+    bool IsIterated;
+    bool HasMatch;
 };

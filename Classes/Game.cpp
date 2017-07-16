@@ -7,6 +7,7 @@
 
 #include "platform/CCPlatformMacros.h"
 #include <random>
+#include <windows.h>
 
 USING_NS_CC;
 
@@ -36,7 +37,7 @@ bool Game::init()
 	}
 
 	// Random seed
-	srand(time(NULL));
+	//srand(time(NULL));
 
 	SelectedGrid = NULL;
 
@@ -99,10 +100,13 @@ bool Game::init()
 	auto nodeTime = Node::create();
 	nodeTime->setName("nodeTime");
 
+    OutputDebugString(L"test\n");
 
+    //char buffer[100];
+    //sprintf_s(buffer, "check it out: %s\n", "I can inject things");
+    //OutputDebugStringA(buffer);
 
 	playerHealth = 10;
-
 
 	//timer.init(playerHealth);
 	//frogLimit = 10;
@@ -212,7 +216,6 @@ void Game::onMouseReleased(Event* event)
 
 void Game::onMouseMove(Event* event)
 {
-
     EventMouse* e = (EventMouse*)event;
     Vec2 CursorPos = Vec2(e->getCursorX(), e->getCursorY());
     if (SelectedGrid)
@@ -220,35 +223,7 @@ void Game::onMouseMove(Event* event)
         Grid* temp = m_GridMap.GetGridWithPos(CursorPos);
         if (temp != NULL)
         {           
-            // Switch Position
-            Vec2 tempPos1 = temp->GetPosition();
-            Vec2 tempPos2 = SelectedGrid->GetPosition();
-
-            temp->GetAnimation()->getSprite()->setPosition(tempPos2);
-            SelectedGrid->GetAnimation()->getSprite()->setPosition(tempPos1);
-            temp->SetPosition(tempPos2);
-            SelectedGrid->SetPosition(tempPos1);
-
-            // Switch Index
-            Vec2 tempIndex1 = temp->GetIndex();
-            Vec2 tempIndex2 = SelectedGrid->GetIndex();
-
-            temp->SetIndex(tempIndex2);
-            SelectedGrid->SetIndex(tempIndex1);
-
-            // Switch Type
-            GridType tempType1 = temp->GetType();
-            GridType tempType2 = SelectedGrid->GetType();
-
-            temp->SetType(tempType1);
-            SelectedGrid->SetType(tempType2);
-
-            // Switch Lane
-            int tempLane1 = temp->GetLane();
-            int tempLane2 = SelectedGrid->GetLane();
-
-            temp->SetLane(tempLane2);
-            SelectedGrid->SetLane(tempLane1);
+            m_GridMap.SwitchGrid(SelectedGrid, temp);
         }
         else
         {
@@ -275,7 +250,6 @@ void Game::onMouseMove(Event* event)
     }
 
 	isHoldingBlock = false;
-
 }
 
 Frog* Game::FetchFrog() {
@@ -345,6 +319,7 @@ void Game::update(float dt)
 	Text << "Score: " << GameInstance::GetInstance()->GetScore();
 	scoreDisplay->setString(Text.str().c_str());
 
+    m_GridMap.update(dt);
 
 	Frog::TYPE frogType = static_cast<Frog::TYPE>(cocos2d::RandomHelper::random_int(0, 3));
 	Frog::LANE lane = static_cast<Frog::LANE>(cocos2d::RandomHelper::random_int(0, 5));

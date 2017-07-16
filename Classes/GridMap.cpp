@@ -34,7 +34,8 @@ void GridMap::init(Vec2 windowsize)
             int tempRand = rand() % 5;
             tempGrid->SetType((GridType)tempRand);
             tempGrid->SetLane(x);
-            tempGrid->SetHaveMatch(false);
+            tempGrid->SetIsIterated(false);
+            tempGrid->SetHasMatch(false);
 
 			auto lilypad = Sprite::create("lilypad.png");
 
@@ -94,16 +95,30 @@ void GridMap::CheckForMatches()
 {
     for (auto it : gridmap)
     {
-        if (!it->GetHaveMatch())
-            CheckSurrondingMatch(it);
+        if (!it->GetHasMatch() && !it->GetIsIterated())
+        {
+            it->SetIsIterated(true);
+            std::list<Grid*> counter;
+
+            counter.push_back(it);
+
+            CheckSurrondingMatch(it, counter);
+
+            if (counter.size() >= 3)
+            {
+                for (auto it : counter)
+                    it->SetHasMatch(true);
+            }
+
+            counter.clear();
+        }
     }
 
     ResolveMatches();
 }
 
-void GridMap::CheckSurrondingMatch(Grid* grid)
+void GridMap::CheckSurrondingMatch(Grid* grid, std::list<Grid*>& counter)
 {
-    int counter = 0;
     for (int y = -1; y <= 1; ++y)
     {
         for (int x = -1; x <= 1; ++x)
@@ -115,10 +130,14 @@ void GridMap::CheckSurrondingMatch(Grid* grid)
                 if (tempIndex.x >= 0 && tempIndex.y >= 0 && tempIndex.x < column && tempIndex.y < row)
                 {
                     Grid* GridChecker = GetGridWithIndex(tempIndex);
-                    if (grid->GetType() == GridChecker->GetType())
+                    if (!GridChecker->GetHasMatch() && !GridChecker->GetIsIterated())
                     {
-                        grid->SetHaveMatch(true);
-                        return;
+                        if (grid->GetType() == GridChecker->GetType())
+                        {
+                            GridChecker->SetIsIterated(true);
+                            counter.push_back(GridChecker);
+                            CheckSurrondingMatch(GridChecker, counter);
+                        }
                     }
                 }
             }
@@ -130,23 +149,88 @@ void GridMap::ResolveMatches(void)
 {
     for (auto it : gridmap)
     {
-        if (it->GetHaveMatch())
+        if (it->GetHasMatch())
         {
             LaneMatches[it->GetLane()]++;
-
-            int tempRand = rand() % 5;
+            int tempRand = it->GetType();
+            while (tempRand == it->GetType())
+            {
+                tempRand = rand() % 5;
+            }
             it->SetType((GridType)tempRand);
-            it->GetAnimation()->changeSprite((Butterfly::TYPE)tempRand);   
-
-            it->SetHaveMatch(false);
+            it->GetAnimation()->changeSprite((Butterfly::TYPE)tempRand);
         }
+        ResetGrid(it);
     }
+}
+
+void GridMap::SwitchGrid(Grid* grid1, Grid* grid2)
+{
+    // Set Temporarys
+    Vec2 tempPos1 = grid1->GetPosition();
+    Vec2 tempPos2 = grid2->GetPosition();
+    Vec2 tempIndex1 = grid1->GetIndex();
+    Vec2 tempIndex2 = grid2->GetIndex();
+    //GridType tempType1 = grid1->GetType();
+    //GridType tempType2 = grid2->GetType();
+    int tempLane1 = grid1->GetLane();
+    int tempLane2 = grid2->GetLane();
+
+    // Switch Type
+    //grid1->SetType(tempType1);
+    //grid2->SetType(tempType2);
+    //swapmap.emplace_back(grid1, grid2);
+
+    // Switch Position
+    grid1->GetAnimation()->getSprite()->setPosition(tempPos2);
+    grid2->GetAnimation()->getSprite()->setPosition(tempPos1);
+    grid1->SetPosition(tempPos2);
+    grid2->SetPosition(tempPos1);
+
+    // Switch Index
+    grid1->SetIndex(tempIndex2);
+    grid2->SetIndex(tempIndex1);
+
+
+
+    // Switch Lane
+    grid1->SetLane(tempLane2);
+    grid2->SetLane(tempLane1);
+}
+
+bool GridMap::SwapAnimation(Grid* grid1, Grid* grid2, float dt)
+{
+    if (grid1->GetAnimation()->getSprite()->getPosition() != grid2->GetAnimation()->getSprite()->getPosition())
+    {
+        Vec2 temp1 = grid1->GetAnimation()->getSprite()->getPosition() * dt;
+        Vec2 temp2 = grid2->GetAnimation()->getSprite()->getPosition() * dt;
+        grid1->GetAnimation()->getSprite()->setPosition(grid1->GetAnimation()->getSprite()->getPosition() + temp2);
+        grid2->GetAnimation()->getSprite()->setPosition(grid2->GetAnimation()->getSprite()->getPosition() + temp1);
+        return true;
+    }
+
+    Vec2 tempPos1 = grid1->GetPosition();
+    Vec2 tempPos2 = grid2->GetPosition();
+
+    grid1->GetAnimation()->getSprite()->setPosition(tempPos2);
+    grid2->GetAnimation()->getSprite()->setPosition(tempPos1);
+
+    return false;
+}
+
+void GridMap::ResetGrid(Grid* grid)
+{
+    grid->SetIsIterated(false);
+    grid->SetHasMatch(false);
 }
 
 void GridMap::ResetLaneMatches(void)
 {
     for (int i = 0; i < 6; ++i)
     {
+        char buffer[100];
+        sprintf_s(buffer, "%d", LaneMatches[i]);
+        OutputDebugStringA(buffer);
         LaneMatches[i] = 0;
     }
 }
@@ -158,7 +242,6 @@ Grid* GridMap::GetGridWithIndex(Vec2 index)
         if (it->GetIndex() == index)
             return it;
     }
-    //return gridmap[index];
 
     return NULL;
 }
@@ -177,4 +260,15 @@ Grid* GridMap::GetGridWithPos(Vec2 pos)
     }
     
     return NULL;
+}
+
+void GridMap::update(float dt)
+{
+    //for (std::list<std::pair<Grid*, Grid*>>::iterator it = swapmap.begin(); it != swapmap.end();)
+    //{
+    //    if (SwapAnimation(it->first, it->second, dt))
+    //        NULL;
+    //    else
+    //        ++it;
+    //}
 }
