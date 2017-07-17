@@ -59,6 +59,8 @@ bool Game::init()
 
 	Size sprite_MudSize = Sprite::create("ZigzagGrass_Mud_Round.png")->getContentSize();
 
+
+
 	//Sprite* Background = Sprite::create("background.png");
 	//Background->setAnchorPoint(Vec2::ZERO);
 	//Background->setContentSize(visibleSize);
@@ -114,6 +116,10 @@ bool Game::init()
 	maxHealth = 0.f;
 
 	wave.init();
+	for (int i = 0; i < 6; i++) {
+	
+		this->addChild(fence.init(i), 1);
+	}
 
 	//nodeTime->addChild(wave.timer.getSprite(), 1);
 	nodeTime->addChild(timer.getSprite(),1);
@@ -125,9 +131,9 @@ bool Game::init()
 	//frogHealthBar.healthBarInit();
 	//frogHealth->addChild(frogHealthBar.getHealthSprite(), 1);
 	//this->addChild(frogHealth, 0);
-
-	isHoldingBlock = false;
 	tookDamage = false;
+	EnableInput = true;
+	CheckMatches = false;
 
 	//Wave display Label
 	waveDisplay = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
@@ -140,6 +146,10 @@ bool Game::init()
 	scoreDisplay->setPosition(Vec2(origin.x + (visibleSize.width / 4) * 3,
 		origin.y + visibleSize.height - scoreDisplay->getContentSize().height));
 	this->addChild(scoreDisplay, 1);
+
+	
+	
+	
 
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 
@@ -175,12 +185,14 @@ void Game::onMousePressed(Event* event)
 	EventMouse* e = (EventMouse*)event;
 	if (e->getMouseButton() == MOUSE_BUTTON_LEFT)
 	{
-		if (SelectedGrid == NULL)
+		if (EnableInput)
 		{
-			SelectedGrid = m_GridMap.GetGridWithPos(Vec2(e->getCursorX(), e->getCursorY()));
+			if (SelectedGrid == NULL)
+			{
+				SelectedGrid = m_GridMap.GetGridWithPos(Vec2(e->getCursorX(), e->getCursorY()));
+			}
 		}
 	}
-	isHoldingBlock = true;
 }
 
 void Game::onMouseReleased(Event* event)
@@ -193,28 +205,26 @@ void Game::onMouseReleased(Event* event)
         {
             SelectedGrid = NULL;
 
-            m_GridMap.CheckForMatches();     
-            
-			for (int i = 0; i < 6; ++i)
-            {
-                if (m_GridMap.GetLaneMatches()[i] > 0)
-                {
-                    Projectile* projectile = FetchProjectile();
-					projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
-					addChild(projectile->GetParticle());
-                }
-            }
-
-			m_GridMap.ResetLaneMatches();
+			CheckMatches = true;
+            //m_GridMap.CheckForMatches();     
+            //
+			//for (int i = 0; i < 6; ++i)
+            //{
+            //    if (m_GridMap.GetLaneMatches()[i] > 0)
+            //    {
+            //        Projectile* projectile = FetchProjectile();
+			//		projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
+			//		addChild(projectile->GetParticle());
+            //    }
+            //}
+			//
+			//m_GridMap.ResetLaneMatches();
         }
     }
-
-	isHoldingBlock = true;
 }
 
 void Game::onMouseMove(Event* event)
 {
-
     EventMouse* e = (EventMouse*)event;
     Vec2 CursorPos = Vec2(e->getCursorX(), e->getCursorY());
     if (SelectedGrid)
@@ -231,24 +241,26 @@ void Game::onMouseMove(Event* event)
             {
                 SelectedGrid = NULL;
 
-                m_GridMap.CheckForMatches();
-				
-				for (int i = 0; i < 6; ++i)
-				{
-					if (m_GridMap.GetLaneMatches()[i] > 0)
-					{
-						Projectile* projectile = FetchProjectile();
-						projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
-						addChild(projectile->GetParticle());
-					}
-				}
+				CheckMatches = true;
 
-				m_GridMap.ResetLaneMatches();
+                //m_GridMap.CheckForMatches();
+				//
+				//for (int i = 0; i < 6; ++i)
+				//{
+				//	if (m_GridMap.GetLaneMatches()[i] > 0)
+				//	{
+				//		Projectile* projectile = FetchProjectile();
+				//		projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
+				//		addChild(projectile->GetParticle());
+				//	}
+				//}
+				//
+				//m_GridMap.ResetLaneMatches();
             }
         }
     }
 
-	isHoldingBlock = false;
+
 }
 
 Frog* Game::FetchFrog() {
@@ -296,10 +308,6 @@ Projectile* Game::FetchProjectile() {
 void Game::update(float dt)
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
-	if (isHoldingBlock == true) {
-		timer.update(dt);
-	}
-
 	if (tookDamage == true){
 		currHealth = dt;
 		maxHealth += dt;
@@ -322,6 +330,29 @@ void Game::update(float dt)
 
 	Frog::TYPE frogType = static_cast<Frog::TYPE>(cocos2d::RandomHelper::random_int(0, 3));
 	Frog::LANE lane = static_cast<Frog::LANE>(cocos2d::RandomHelper::random_int(0, 5));
+
+	if (CheckMatches)
+	{
+		EnableInput = false;
+
+		CheckMatches = m_GridMap.CheckForMatches();
+		
+		for (int i = 0; i < 6; ++i)
+		{
+			if (m_GridMap.GetLaneMatches()[i] > 0)
+			{
+				Projectile* projectile = FetchProjectile();
+				projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
+				addChild(projectile->GetParticle());
+			}
+		}
+		
+		m_GridMap.ResetLaneMatches();
+	}
+	else if (!CheckMatches)
+	{
+		EnableInput = true;
+	}
 
 	//if (this->getChildrenCount()<= frogLimit){
 	//	
@@ -395,7 +426,6 @@ void Game::update(float dt)
 						if (frogit->getSprite()->getBoundingBox().containsPoint(it->GetPosition()))
 						{
 							frogit->takeDamage(it->GetDamage());
-
 							it->SetIsActive(false);
 							this->removeChild(it->GetParticle());
 						}

@@ -91,7 +91,7 @@ Butterfly* GridMap::MakeAnimation(Vec2 pos, GridType type)
 	return tempAnim;
 }
 
-void GridMap::CheckForMatches()
+bool GridMap::CheckForMatches()
 {
 	for (auto it : gridmap)
 	{
@@ -114,7 +114,7 @@ void GridMap::CheckForMatches()
 		}
 	}
 
-	ResolveMatches();
+	return ResolveMatches();
 }
 
 void GridMap::CheckSurrondingMatch(Grid* grid, std::list<Grid*>& counter)
@@ -145,12 +145,14 @@ void GridMap::CheckSurrondingMatch(Grid* grid, std::list<Grid*>& counter)
 	}
 }
 
-void GridMap::ResolveMatches(void)
+bool GridMap::ResolveMatches(void)
 {
+	bool hasMatches = false;
 	for (auto it : gridmap)
 	{
 		if (it->GetHasMatch())
 		{
+			hasMatches = true;
 			LaneMatches[it->GetLane()]++;
 			int tempRand = it->GetType();
 			while (tempRand == it->GetType())
@@ -162,6 +164,8 @@ void GridMap::ResolveMatches(void)
 		}
 		ResetGrid(it);
 	}
+
+	return hasMatches;
 }
 
 void GridMap::SwitchGrid(Grid* grid1, Grid* grid2)

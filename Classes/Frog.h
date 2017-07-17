@@ -55,9 +55,7 @@ public:
 
 	void init(TYPE frog, int lane);
 	void healthBarInit();
-	void runItDown(void);
 
-	void attack(void);
 
 	void update(float dt);
 

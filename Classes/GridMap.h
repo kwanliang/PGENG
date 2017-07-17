@@ -15,12 +15,12 @@ public:
     void init(Vec2 windowsize);
     Butterfly* MakeAnimation(Vec2 pos, GridType type);
 
-    void CheckForMatches(void);
+    bool CheckForMatches(void);
     void CheckSurrondingMatch(Grid* grid, std::list<Grid*>& counter);
     void SwitchGrid(Grid* grid1, Grid* grid2);
     bool SwapAnimation(Grid* grid1, Grid* grid2, float dt);
     void ResetGrid(Grid* grid);
-    void ResolveMatches(void);
+    bool ResolveMatches(void);
     void ResetLaneMatches(void);
     Grid* GetGridWithIndex(Vec2 index);
     Grid* GetGridWithPos(Vec2 pos);

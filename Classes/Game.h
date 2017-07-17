@@ -10,6 +10,7 @@
 #include "Timer.h"
 #include "Projectile.h"
 #include "WaveSystem.h"
+#include "Fence.h"
 
 using namespace cocos2d;
 
@@ -43,9 +44,11 @@ private:
 
 
 	Wave wave;
+	Fence fence;
 	cocos2d::Label* waveDisplay;
 	std::stringstream Text;
 	cocos2d::Label* scoreDisplay;
+	Sprite* fenceSprite;
 
 	int score;
 
@@ -61,4 +64,6 @@ private:
 	int playerHealth;
 	bool tookDamage;
 	bool isHoldingBlock;
+	bool EnableInput;
+	bool CheckMatches;
 };

@@ -11,7 +11,7 @@ void Frog::init(TYPE frog, int lane)
 	{
 	case TYPE::GREEN:
 	{
-		HP = 2;
+		HP = 7;
 		damage = 2;
 		//speed = randomFloatBetween(0.1f, 0.5f);
 		speed = 0.2f;
@@ -20,7 +20,7 @@ void Frog::init(TYPE frog, int lane)
 	}
 	case TYPE::YELLOW:
 	{
-		HP = 1;
+		HP = 6;
 		damage = 1;
 		//speed = randomFloatBetween(0.1f, 0.5f);
 		speed = 0.5f;
@@ -29,7 +29,7 @@ void Frog::init(TYPE frog, int lane)
 	}
 	case TYPE::BLUE:
 	{
-		HP = 3;
+		HP = 8;
 		damage = 2;
 		//speed = randomFloatBetween(0.1f, 0.5f);
 		speed = 0.1f;
@@ -38,7 +38,7 @@ void Frog::init(TYPE frog, int lane)
 	}
 	case TYPE::RED:
 	{
-		HP = 4;
+		HP = 9;
 		damage = 4;
 		//speed = randomFloatBetween(0.1f, 0.5f);
 		speed = 0.4f;
@@ -101,8 +101,7 @@ void Frog::update(float dt)
 		return;
 	}	
 
-	//currHp -= GetDamage();
-	//frogHealthBar->setPercentage(100 * (currHp / maxHp));
+	
 }
 
 //Setter-ish
@@ -112,8 +111,14 @@ void Frog::takeDamage(int amount)
 	{
 		return;
 	}
+	currHp -= GetDamage();
 
+	frogHealthBar->setPercentage(100 * (currHp / maxHp));
 	HP -= amount;
+
+	char buffer[100];
+	sprintf_s(buffer, "damage: %d hp: %d\n", amount, HP);
+	OutputDebugStringA(buffer);
 }
 void Frog::augmentSpeed(float newSpeed)
 {
