@@ -86,7 +86,15 @@ void Frog::init(TYPE frog, int lane)
 		break;
 	}
 	isDead = false;
+	FreezeTime = 4.0f;
+	CurrFreezeTime = 0.0f;
 	SetScale(Vec2(3, 3));
+
+	freezeSprite = Sprite::create("freeze.png");
+	//freezeSprite->setAnchorPoint(Vec2::ZERO);
+	freezeSprite->setScaleX(3);
+	freezeSprite->setScaleY(3);
+	freezeSprite->setVisible(isFrozen);
 
 	runAnimation();
 }
@@ -101,7 +109,22 @@ void Frog::update(float dt)
 		return;
 	}	
 
-	
+	freezeSprite->setVisible(isFrozen);
+
+	if (isFrozen)
+	{
+		if (CurrFreezeTime >= FreezeTime)
+		{
+			isFrozen = false;
+			CurrFreezeTime = 0.0f;
+		}
+		else
+		{
+			CurrFreezeTime += dt;
+		}
+	}
+	//currHp -= GetDamage();
+	//frogHealthBar->setPercentage(100 * (currHp / maxHp));
 }
 
 //Setter-ish
@@ -115,10 +138,6 @@ void Frog::takeDamage(int amount)
 
 	frogHealthBar->setPercentage(100 * (currHp / maxHp));
 	HP -= amount;
-
-	char buffer[100];
-	sprintf_s(buffer, "damage: %d hp: %d\n", amount, HP);
-	OutputDebugStringA(buffer);
 }
 void Frog::augmentSpeed(float newSpeed)
 {

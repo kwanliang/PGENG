@@ -99,6 +99,13 @@ bool Game::init()
 	});
 	this->addChild(B_Back);
 
+	FreezePowerup = Sprite::create("freeze.png");
+	FreezePowerup->setPosition(Vec2(70, 730));
+	FreezePowerup->setScaleX(3);
+	FreezePowerup->setScaleY(3);
+
+	this->addChild(FreezePowerup);
+
 	auto nodeTime = Node::create();
 	nodeTime->setName("nodeTime");
 
@@ -192,6 +199,8 @@ void Game::onMousePressed(Event* event)
 				SelectedGrid = m_GridMap.GetGridWithPos(Vec2(e->getCursorX(), e->getCursorY()));
 			}
 		}
+		ClickFreeze(Vec2(e->getCursorX(), e->getCursorY()));
+	}
 	}
 }
 
@@ -305,6 +314,28 @@ Projectile* Game::FetchProjectile() {
 	return projectile;
 }
 
+void Game::ClickFreeze(Vec2 pos)
+{
+	if (FreezePowerup->getBoundingBox().containsPoint(pos))
+	{
+		if (GameInstance::GetInstance()->GetFreeze() != 0)
+		{
+			FreezeAllFrog();
+		}
+	}
+}
+
+void Game::FreezeAllFrog()
+{
+	GameInstance::GetInstance()->DecrementFreeze();
+	for (int i = 0; i < frogList.size(); i++) {
+		if (frogList.at(i)->isActive)
+		{
+			frogList.at(i)->isFrozen = true;
+		}
+	}
+}
+
 void Game::update(float dt)
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -370,6 +401,7 @@ void Game::update(float dt)
 			frog->init(frogType, lane);
 			frog->healthBarInit();
 			addChild(frog->getSprite(), 1);
+			addChild(frog->getFSprite(), 2);
 			addChild(frog->getHealthSprite(), 1);
 			wave.currFrog++;
 		}
@@ -383,8 +415,12 @@ void Game::update(float dt)
 			frogCount++;
 			float a = frogList.at(i)->getPos().y;
 			float b = frogList.at(i)->getPos().x;
-			a -= frogList.at(i)->GetSpeed();
+			if (!frogList.at(i)->isFrozen)
+			{
+				a -= frogList.at(i)->GetSpeed();
+			}
 			frogList.at(i)->SetPos(Vec2(b, a));
+			frogList.at(i)->getFSprite()->setPosition(Vec2(b, a));
 			frogList.at(i)->getHealthSprite()->setPosition(Vec2(frogList.at(i)->getPos().x, frogList.at(i)->getPos().y + 30));
 			for (auto it : frogList) {
 				if (it->isActive)

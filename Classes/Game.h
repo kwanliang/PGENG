@@ -32,6 +32,7 @@ public:
     virtual void onMouseMove(Event*);
 	Frog* FetchFrog();
     Projectile* FetchProjectile();
+	void FreezeAllFrog();
     // implement the "static create()" method manually
     CREATE_FUNC(Game);
 
@@ -66,4 +67,8 @@ private:
 	bool isHoldingBlock;
 	bool EnableInput;
 	bool CheckMatches;
+
+	//Powerup stuff
+	cocos2d::Sprite* FreezePowerup;
+	void ClickFreeze(Vec2 pos);
 };

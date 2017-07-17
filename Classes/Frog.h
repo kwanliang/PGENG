@@ -13,12 +13,17 @@ private:
 	int HP;
 	float damage;
 	float speed;
+	
+	float FreezeTime;
+	float CurrFreezeTime;
 	//Is the frog ded?
 	bool isDead;
 
 	float currHp;
 	float maxHp;
 	cocos2d::CCProgressTimer* frogHealthBar;
+
+	cocos2d::Sprite* freezeSprite;
 
 public:
 	//What type is the frog?
@@ -56,7 +61,6 @@ public:
 	void init(TYPE frog, int lane);
 	void healthBarInit();
 
-
 	void update(float dt);
 
 	//Setter-ish
@@ -70,8 +74,10 @@ public:
 	float GetSpeed(void);
 	bool GetisDead(void);
 	bool isActive = false;
+	bool isFrozen = false;
 
 	cocos2d::CCProgressTimer* getHealthSprite(void) { return frogHealthBar; }
+	cocos2d::Sprite* getFSprite(void) { return freezeSprite; }
 };
 
 #endif
