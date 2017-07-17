@@ -38,7 +38,7 @@ void Frog::init(TYPE frog, int lane)
 	}
 	case TYPE::RED:
 	{
-		HP = 9;
+		HP = 5;
 		damage = 4;
 		//speed = randomFloatBetween(0.1f, 0.5f);
 		speed = 0.4f;

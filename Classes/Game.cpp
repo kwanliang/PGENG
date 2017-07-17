@@ -107,12 +107,6 @@ bool Game::init()
 	auto nodeTime = Node::create();
 	nodeTime->setName("nodeTime");
 
-    OutputDebugString(L"test\n");
-
-    //char buffer[100];
-    //sprintf_s(buffer, "check it out: %s\n", "I can inject things");
-    //OutputDebugStringA(buffer);
-
 	playerHealth = 10;
 
 
@@ -195,7 +189,6 @@ void Game::onMousePressed(Event* event)
 		}
 		ClickFreeze(Vec2(e->getCursorX(), e->getCursorY()));
 	}
-	}
 }
 
 void Game::onMouseReleased(Event* event)
@@ -219,6 +212,10 @@ void Game::onMouseReleased(Event* event)
                     Projectile* projectile = FetchProjectile();
 					projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
 					addChild(projectile->GetParticle());
+
+					char buffer[100];
+					sprintf_s(buffer, "%d\n", m_GridMap.GetLaneMatches()[i]);
+					OutputDebugStringA(buffer);
                 }
             }
 			
@@ -256,6 +253,10 @@ void Game::onMouseMove(Event* event)
 						Projectile* projectile = FetchProjectile();
 						projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
 						addChild(projectile->GetParticle());
+
+						char buffer[100];
+						sprintf_s(buffer, "%d\n", m_GridMap.GetLaneMatches()[i]);
+						OutputDebugStringA(buffer);
 					}
 				}
 				

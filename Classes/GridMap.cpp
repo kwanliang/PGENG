@@ -232,9 +232,6 @@ void GridMap::ResetLaneMatches(void)
 {
 	for (int i = 0; i < 6; ++i)
 	{
-		char buffer[100];
-		sprintf_s(buffer, "%d", LaneMatches[i]);
-		OutputDebugStringA(buffer);
 		LaneMatches[i] = 0;
 	}
 }
