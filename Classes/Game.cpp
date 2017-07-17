@@ -59,12 +59,10 @@ bool Game::init()
 
 	Size sprite_MudSize = Sprite::create("ZigzagGrass_Mud_Round.png")->getContentSize();
 
-
-
-	//Sprite* Background = Sprite::create("background.png");
-	//Background->setAnchorPoint(Vec2::ZERO);
-	//Background->setContentSize(visibleSize);
-	//this->addChild(Background);
+	Sprite* Background = Sprite::create("background.png");
+	Background->setAnchorPoint(Vec2::ZERO);
+	Background->setContentSize(visibleSize);
+	this->addChild(Background);
 
 	for (int i = 0; i < m_GridMap.GetNumGrid(); ++i)
 	{
@@ -154,14 +152,10 @@ bool Game::init()
 		origin.y + visibleSize.height - scoreDisplay->getContentSize().height));
 	this->addChild(scoreDisplay, 1);
 
-	
-	
-	
-
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 
 	// set the background music and continuously play it.
-	//audio->playBackgroundMusic("Sound/BGM.wav", true);
+	audio->playBackgroundMusic("Sound/BGM.wav", true);
 
 	auto keyboard_listener = EventListenerKeyboard::create();
 	keyboard_listener->onKeyPressed = CC_CALLBACK_2(Game::onKeyPressed, this);
@@ -215,19 +209,20 @@ void Game::onMouseReleased(Event* event)
             SelectedGrid = NULL;
 
 			CheckMatches = true;
-            //m_GridMap.CheckForMatches();     
-            //
-			//for (int i = 0; i < 6; ++i)
-            //{
-            //    if (m_GridMap.GetLaneMatches()[i] > 0)
-            //    {
-            //        Projectile* projectile = FetchProjectile();
-			//		projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
-			//		addChild(projectile->GetParticle());
-            //    }
-            //}
-			//
-			//m_GridMap.ResetLaneMatches();
+
+            m_GridMap.CheckForMatches();     
+            
+			for (int i = 0; i < 6; ++i)
+            {
+                if (m_GridMap.GetLaneMatches()[i] > 0)
+                {
+                    Projectile* projectile = FetchProjectile();
+					projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
+					addChild(projectile->GetParticle());
+                }
+            }
+			
+			m_GridMap.ResetLaneMatches();
         }
     }
 }
@@ -252,19 +247,19 @@ void Game::onMouseMove(Event* event)
 
 				CheckMatches = true;
 
-                //m_GridMap.CheckForMatches();
-				//
-				//for (int i = 0; i < 6; ++i)
-				//{
-				//	if (m_GridMap.GetLaneMatches()[i] > 0)
-				//	{
-				//		Projectile* projectile = FetchProjectile();
-				//		projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
-				//		addChild(projectile->GetParticle());
-				//	}
-				//}
-				//
-				//m_GridMap.ResetLaneMatches();
+                m_GridMap.CheckForMatches();
+				
+				for (int i = 0; i < 6; ++i)
+				{
+					if (m_GridMap.GetLaneMatches()[i] > 0)
+					{
+						Projectile* projectile = FetchProjectile();
+						projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
+						addChild(projectile->GetParticle());
+					}
+				}
+				
+				m_GridMap.ResetLaneMatches();
             }
         }
     }
@@ -368,15 +363,15 @@ void Game::update(float dt)
 
 		CheckMatches = m_GridMap.CheckForMatches();
 		
-		for (int i = 0; i < 6; ++i)
-		{
-			if (m_GridMap.GetLaneMatches()[i] > 0)
-			{
-				Projectile* projectile = FetchProjectile();
-				projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
-				addChild(projectile->GetParticle());
-			}
-		}
+		//for (int i = 0; i < 6; ++i)
+		//{
+		//	if (m_GridMap.GetLaneMatches()[i] > 0)
+		//	{
+		//		Projectile* projectile = FetchProjectile();
+		//		projectile->Init(i, m_GridMap.GetLaneMatches()[i]);
+		//		addChild(projectile->GetParticle());
+		//	}
+		//}
 		
 		m_GridMap.ResetLaneMatches();
 	}
